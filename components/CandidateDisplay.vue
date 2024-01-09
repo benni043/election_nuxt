@@ -1,15 +1,28 @@
 <script setup lang="ts">
 
-import type {Candidate} from "~/utils/types";
+import {type Candidate, VoteType} from "~/utils/types";
 
 let props = defineProps<{
   candidate: Candidate;
   firstVoteEnabled: boolean;
   secondaryVoteEnabled: boolean;
+
 }>();
 
-let value: boolean;
-let value2: boolean;
+let emit = defineEmits<{
+  firstVote: []
+  secondaryVote: []
+}>();
+
+function change(voteType: VoteType) {
+  if (voteType === VoteType.FIRST_VOTE) {
+    props.candidate.firstVoteChecked = !props.candidate.firstVoteChecked;
+    emit('firstVote');
+  } else {
+    props.candidate.secondaryVoteChecked = !props.candidate.secondaryVoteChecked;
+    emit('secondaryVote');
+  }
+}
 
 </script>
 
@@ -21,12 +34,16 @@ let value2: boolean;
     <h4>Erststimmen: {{ props.candidate.electionStats.numberOfFirstVotes }}</h4>
 
     <label for="firstVote">Erststimme</label>
-    <input :disabled="!props.firstVoteEnabled && !value" type="checkbox" name="firstVote" id="firstVote"
-           @change="$emit('firstVote')" v-model="value">
+    <input class="x" :disabled="!props.firstVoteEnabled && !props.candidate.firstVoteChecked"
+           type="checkbox" name="firstVote" id="firstVote"
+           @change="change(VoteType.FIRST_VOTE)">
 
     <label for="secondaryVote">Zweitstimme</label>
-    <input :disabled="!props.secondaryVoteEnabled && !value" type="checkbox" name="secondaryVote" id="secondaryVote"
-           @change="$emit('secondaryVote')" v-model="value2">
+    <input :disabled="!props.secondaryVoteEnabled && !props.candidate.secondaryVoteChecked"
+           type="checkbox"
+           name="secondaryVote"
+           id="secondaryVote"
+           @change="change(VoteType.SECONDARY_VOTE)">
   </div>
 </template>
 
