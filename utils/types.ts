@@ -1,10 +1,12 @@
+import type {UUID} from "node:crypto";
+
 export interface Candidate {
-    id: number
+    id: UUID
     firstName: string;
     lastName: string;
     schoolClass: string;
 
-    firstVoteChecked: boolean;
+    primaryVoteChecked: boolean;
     secondaryVoteChecked: boolean;
 
     electionStats: ElectionStats;

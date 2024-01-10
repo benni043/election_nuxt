@@ -1,52 +1,125 @@
 <script setup lang="ts">
-
-import {type Candidate, VoteType} from "~/utils/types";
+import { type Candidate, VoteType } from "~/utils/types";
+import type { UUID } from "node:crypto";
 
 let props = defineProps<{
   candidate: Candidate;
-  firstVoteEnabled: boolean;
+  primaryVoteEnabled: boolean;
   secondaryVoteEnabled: boolean;
-
 }>();
 
 let emit = defineEmits<{
-  firstVote: []
-  secondaryVote: []
+  primaryVote: [id: UUID];
+  secondaryVote: [id: UUID];
 }>();
 
 function change(voteType: VoteType) {
-  if (voteType === VoteType.FIRST_VOTE) {
-    props.candidate.firstVoteChecked = !props.candidate.firstVoteChecked;
-    emit('firstVote');
-  } else {
-    props.candidate.secondaryVoteChecked = !props.candidate.secondaryVoteChecked;
-    emit('secondaryVote');
-  }
+  if (voteType === VoteType.FIRST_VOTE) emit("primaryVote", props.candidate.id);
+  else emit("secondaryVote", props.candidate.id);
 }
-
 </script>
 
 <template>
-  <div>
-    <h3>{{ props.candidate.lastName }} {{ props.candidate.firstName }} | {{ props.candidate.schoolClass }}</h3>
+  <div id="outer">
+    <div id="head">
+      {{ props.candidate.lastName }} {{ props.candidate.firstName }} |
+      {{ props.candidate.schoolClass }}
+    </div>
 
-    <h4>Punkte: {{ props.candidate.electionStats.points }}</h4>
-    <h4>Erststimmen: {{ props.candidate.electionStats.numberOfFirstVotes }}</h4>
+    <div id="data">
+      <div>Punkte: {{ props.candidate.electionStats.points }}</div>
+      <div>
+        Erststimmen: {{ props.candidate.electionStats.numberOfFirstVotes }}
+      </div>
+    </div>
 
-    <label for="firstVote">Erststimme</label>
-    <input class="x" :disabled="!props.firstVoteEnabled && !props.candidate.firstVoteChecked"
-           type="checkbox" name="firstVote" id="firstVote"
-           @change="change(VoteType.FIRST_VOTE)">
+    <div id="field">
+      <div>
+        <input
+          :disabled="
+            (!props.primaryVoteEnabled &&
+              !props.candidate.primaryVoteChecked) ||
+            props.candidate.secondaryVoteChecked
+          "
+          v-model="props.candidate.primaryVoteChecked"
+          type="checkbox"
+          name="firstVote"
+          id="firstVote"
+          @change="change(VoteType.FIRST_VOTE)"
+        />
+        <label
+          :class="{
+            disabled:
+              (!props.primaryVoteEnabled &&
+                !props.candidate.primaryVoteChecked) ||
+              props.candidate.secondaryVoteChecked,
+          }"
+          for="firstVote"
+          >Erststimme</label
+        >
+      </div>
 
-    <label for="secondaryVote">Zweitstimme</label>
-    <input :disabled="!props.secondaryVoteEnabled && !props.candidate.secondaryVoteChecked"
-           type="checkbox"
-           name="secondaryVote"
-           id="secondaryVote"
-           @change="change(VoteType.SECONDARY_VOTE)">
+      <div>
+        <input
+          :disabled="
+            (!props.secondaryVoteEnabled &&
+              !props.candidate.secondaryVoteChecked) ||
+            props.candidate.primaryVoteChecked
+          "
+          v-model="props.candidate.secondaryVoteChecked"
+          type="checkbox"
+          name="secondaryVote"
+          id="secondaryVote"
+          @change="change(VoteType.SECONDARY_VOTE)"
+        />
+        <label
+          :class="{
+            disabled:
+              (!props.secondaryVoteEnabled &&
+                !props.candidate.secondaryVoteChecked) ||
+              props.candidate.primaryVoteChecked,
+          }"
+          for="secondaryVote"
+          >Zweitstimme</label
+        >
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
+#outer {
+  border: 3px solid black;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 10px;
+  background-color: #dddddd;
+  width: 300px;
 
+  display: flex;
+  flex-direction: column;
+}
+
+#head {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#data {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+#field {
+  font-size: 18px;
+}
+
+.disabled {
+  color: #aaaaaa;
+}
+
+input {
+  margin: 0 10px 0 0;
+}
 </style>
