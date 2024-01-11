@@ -60,6 +60,7 @@ candidates.push(candidate3);
 
 let ballotPaper1 = {
   id: crypto.randomUUID(),
+  ballotPaperNumber: 1,
   firstVoteCandidate: candidate1,
   secondaryVoteCandidate: candidate2,
 } as BallotPaper;
@@ -71,31 +72,28 @@ let isSecondaryVoteClicked = ref(true);
 
 let canSave = ref(false);
 
-let primaryVoteCandidateID: UUID | null;
-let secondaryVoteCandidateID: UUID | null;
+let primaryVoteCandidate: Candidate | null;
+let secondaryVoteCandidate: Candidate | null;
 
-function set(voteType: VoteType, id: UUID | null) {
+function set(voteType: VoteType, candidate: Candidate | null) {
   if (voteType === VoteType.FIRST_VOTE) {
     isPrimaryVoteClicked.value = !isPrimaryVoteClicked.value;
-    primaryVoteCandidateID = isPrimaryVoteClicked.value ? null : id;
+    primaryVoteCandidate = isPrimaryVoteClicked.value ? null : candidate;
   } else {
     isSecondaryVoteClicked.value = !isSecondaryVoteClicked.value;
-    secondaryVoteCandidateID = isSecondaryVoteClicked.value ? null : id;
+    secondaryVoteCandidate = isSecondaryVoteClicked.value ? null : candidate;
   }
 
   canSave.value = !isPrimaryVoteClicked.value || !isSecondaryVoteClicked.value;
 }
 
 function save() {
-  const primaryVoteIndex = getCandidateIndexByID(primaryVoteCandidateID!);
-  if (primaryVoteIndex !== null) {
-    candidates[primaryVoteIndex].electionStats.points += 2;
-    candidates[primaryVoteIndex].electionStats.numberOfFirstVotes += 1;
+  if (primaryVoteCandidate) {
+    primaryVoteCandidate.electionStats.points += 2;
+    primaryVoteCandidate.electionStats.numberOfFirstVotes += 1;
   }
 
-  const secondaryVoteIndex = getCandidateIndexByID(secondaryVoteCandidateID!);
-  if (secondaryVoteIndex !== null)
-    candidates[secondaryVoteIndex].electionStats.points += 1;
+  if (secondaryVoteCandidate) secondaryVoteCandidate.electionStats.points += 1;
 
   reset();
 }
@@ -106,21 +104,13 @@ function reset() {
 
   canSave.value = false;
 
-  primaryVoteCandidateID = null;
-  secondaryVoteCandidateID = null;
+  primaryVoteCandidate = null;
+  secondaryVoteCandidate = null;
 
   for (let candidate of candidates) {
     candidate.primaryVoteChecked = false;
     candidate.secondaryVoteChecked = false;
   }
-}
-
-function getCandidateIndexByID(id: UUID): number | null {
-  for (let i = 0; i < candidates.length; i++) {
-    if (candidates[i].id === id) return i;
-  }
-
-  return null;
 }
 </script>
 
@@ -141,13 +131,13 @@ function getCandidateIndexByID(id: UUID): number | null {
           :is-primary-vote-clicked="isPrimaryVoteClicked"
           :is-secondary-vote-clicked="isSecondaryVoteClicked"
           @primary-vote="
-            (id: UUID) => {
-              set(VoteType.FIRST_VOTE, id);
+            (candidate: Candidate) => {
+              set(VoteType.FIRST_VOTE, candidate);
             }
           "
           @secondary-vote="
-            (id: UUID) => {
-              set(VoteType.SECONDARY_VOTE, id);
+            (candidate: Candidate) => {
+              set(VoteType.SECONDARY_VOTE, candidate);
             }
           "
         ></CandidateDisplay>
@@ -161,15 +151,13 @@ function getCandidateIndexByID(id: UUID): number | null {
         <BallotPaperDisplay
           :ballot-paper="ballotPaper"
           @primary-vote="
-            (id: UUID) => {
-              console.log(id)
-              set(VoteType.FIRST_VOTE, id);
+            (candidate: Candidate) => {
+              set(VoteType.FIRST_VOTE, candidate);
             }
           "
           @secondary-vote="
-            (id: UUID) => {
-              console.log(id)
-              set(VoteType.SECONDARY_VOTE, id);
+            (candidate: Candidate) => {
+              set(VoteType.SECONDARY_VOTE, candidate);
             }
           "
         ></BallotPaperDisplay>

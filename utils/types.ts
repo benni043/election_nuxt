@@ -24,6 +24,7 @@ export enum VoteType {
 
 export interface BallotPaper {
   id: UUID;
+  ballotPaperNumber: number;
   firstVoteCandidate: Candidate | undefined;
   secondaryVoteCandidate: Candidate | undefined;
 }

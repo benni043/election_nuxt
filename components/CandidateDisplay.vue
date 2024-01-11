@@ -9,13 +9,13 @@ let props = defineProps<{
 }>();
 
 let emit = defineEmits<{
-  primaryVote: [id: UUID];
-  secondaryVote: [id: UUID];
+  primaryVote: [id: Candidate];
+  secondaryVote: [id: Candidate];
 }>();
 
 function change(voteType: VoteType) {
-  if (voteType === VoteType.FIRST_VOTE) emit("primaryVote", props.candidate.id);
-  else emit("secondaryVote", props.candidate.id);
+  if (voteType === VoteType.FIRST_VOTE) emit("primaryVote", props.candidate);
+  else emit("secondaryVote", props.candidate);
 }
 </script>
 

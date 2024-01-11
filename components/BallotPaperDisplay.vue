@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BallotPaper } from "~/utils/types";
+import type { BallotPaper, Candidate } from "~/utils/types";
 import type { UUID } from "node:crypto";
 
 let props = defineProps<{
@@ -7,8 +7,8 @@ let props = defineProps<{
 }>();
 
 let emit = defineEmits<{
-  primaryVote: [id: UUID];
-  secondaryVote: [id: UUID];
+  primaryVote: [id: Candidate];
+  secondaryVote: [id: Candidate];
 }>();
 
 function change() {
@@ -17,13 +17,13 @@ function change() {
     props.ballotPaper.firstVoteCandidate.electionStats.points -= 2;
     props.ballotPaper.firstVoteCandidate.electionStats.numberOfFirstVotes -= 1;
 
-    emit("primaryVote", props.ballotPaper.firstVoteCandidate.id);
+    emit("primaryVote", props.ballotPaper.firstVoteCandidate);
   }
   if (props.ballotPaper.secondaryVoteCandidate) {
     props.ballotPaper.secondaryVoteCandidate.secondaryVoteChecked = true;
     props.ballotPaper.secondaryVoteCandidate.electionStats.points -= 1;
 
-    emit("secondaryVote", props.ballotPaper.secondaryVoteCandidate.id);
+    emit("secondaryVote", props.ballotPaper.secondaryVoteCandidate);
   }
 }
 </script>
