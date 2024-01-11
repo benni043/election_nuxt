@@ -4,8 +4,8 @@ import type { UUID } from "node:crypto";
 
 let props = defineProps<{
   candidate: Candidate;
-  primaryVoteEnabled: boolean;
-  secondaryVoteEnabled: boolean;
+  isPrimaryVoteClicked: boolean;
+  isSecondaryVoteClicked: boolean;
 }>();
 
 let emit = defineEmits<{
@@ -37,7 +37,7 @@ function change(voteType: VoteType) {
       <div>
         <input
           :disabled="
-            (!props.primaryVoteEnabled &&
+            (!props.isPrimaryVoteClicked &&
               !props.candidate.primaryVoteChecked) ||
             props.candidate.secondaryVoteChecked
           "
@@ -50,7 +50,7 @@ function change(voteType: VoteType) {
         <label
           :class="{
             disabled:
-              (!props.primaryVoteEnabled &&
+              (!props.isPrimaryVoteClicked &&
                 !props.candidate.primaryVoteChecked) ||
               props.candidate.secondaryVoteChecked,
           }"
@@ -62,7 +62,7 @@ function change(voteType: VoteType) {
       <div>
         <input
           :disabled="
-            (!props.secondaryVoteEnabled &&
+            (!props.isSecondaryVoteClicked &&
               !props.candidate.secondaryVoteChecked) ||
             props.candidate.primaryVoteChecked
           "
@@ -75,7 +75,7 @@ function change(voteType: VoteType) {
         <label
           :class="{
             disabled:
-              (!props.secondaryVoteEnabled &&
+              (!props.isSecondaryVoteClicked &&
                 !props.candidate.secondaryVoteChecked) ||
               props.candidate.primaryVoteChecked,
           }"
