@@ -12,10 +12,19 @@ let emit = defineEmits<{
 }>();
 
 function change() {
-  if (props.ballotPaper.firstVoteCandidate)
+  if (props.ballotPaper.firstVoteCandidate) {
+    props.ballotPaper.firstVoteCandidate.primaryVoteChecked = true;
+    props.ballotPaper.firstVoteCandidate.electionStats.points -= 2;
+    props.ballotPaper.firstVoteCandidate.electionStats.numberOfFirstVotes -= 1;
+
     emit("primaryVote", props.ballotPaper.firstVoteCandidate.id);
-  if (props.ballotPaper.secondaryVoteCandidate)
+  }
+  if (props.ballotPaper.secondaryVoteCandidate) {
+    props.ballotPaper.secondaryVoteCandidate.secondaryVoteChecked = true;
+    props.ballotPaper.secondaryVoteCandidate.electionStats.points -= 1;
+
     emit("secondaryVote", props.ballotPaper.secondaryVoteCandidate.id);
+  }
 }
 </script>
 
@@ -41,7 +50,7 @@ function change() {
       >
     </div>
 
-    <button>Ändern</button>
+    <button @click="change">Ändern</button>
   </div>
 </template>
 

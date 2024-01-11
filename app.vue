@@ -39,24 +39,24 @@ let candidate2 = {
     numberOfFirstVotes: 0,
   } as ElectionStats,
 } as Candidate;
-// let candidate3 = {
-//   id: crypto.randomUUID(),
-//   lastName: "Götz",
-//   firstName: "Fabian",
-//   schoolClass: "4AHIF",
-//
-//   primaryVoteChecked: false,
-//   secondaryVoteChecked: false,
-//
-//   electionStats: {
-//     points: 0,
-//     numberOfFirstVotes: 0,
-//   } as ElectionStats,
-// } as Candidate;
+let candidate3 = {
+  id: crypto.randomUUID(),
+  lastName: "Götz",
+  firstName: "Fabian",
+  schoolClass: "4AHIF",
+
+  primaryVoteChecked: false,
+  secondaryVoteChecked: false,
+
+  electionStats: {
+    points: 0,
+    numberOfFirstVotes: 0,
+  } as ElectionStats,
+} as Candidate;
 
 candidates.push(candidate1);
 candidates.push(candidate2);
-// candidates.push(candidate3);
+candidates.push(candidate3);
 
 let ballotPaper1 = {
   id: crypto.randomUUID(),
@@ -158,7 +158,21 @@ function getCandidateIndexByID(id: UUID): number | null {
 
     <div>
       <div ref="refs" v-for="ballotPaper in ballotPapers">
-        <BallotPaperDisplay :ballot-paper="ballotPaper"></BallotPaperDisplay>
+        <BallotPaperDisplay
+          :ballot-paper="ballotPaper"
+          @primary-vote="
+            (id: UUID) => {
+              console.log(id)
+              set(VoteType.FIRST_VOTE, id);
+            }
+          "
+          @secondary-vote="
+            (id: UUID) => {
+              console.log(id)
+              set(VoteType.SECONDARY_VOTE, id);
+            }
+          "
+        ></BallotPaperDisplay>
       </div>
     </div>
   </div>
