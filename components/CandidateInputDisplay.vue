@@ -69,7 +69,6 @@ function submitForm() {
   height: min-content;
   margin: 0 auto;
   border: 3px solid black;
-  background-color: #cccccc;
 }
 
 .form-group {

@@ -61,11 +61,12 @@ candidates.push(candidate3);
 let ballotPaper1 = {
   id: crypto.randomUUID(),
   ballotPaperNumber: 1,
-  firstVoteCandidate: candidate1,
+  isActive: true,
+  primaryVoteCandidate: candidate1,
   secondaryVoteCandidate: candidate2,
 } as BallotPaper;
 
-ballotPapers.push(ballotPaper1);
+// ballotPapers.push(ballotPaper1);
 
 let isPrimaryVoteClicked = ref(true);
 let isSecondaryVoteClicked = ref(true);
@@ -74,6 +75,8 @@ let canSave = ref(false);
 
 let primaryVoteCandidate: Candidate | null;
 let secondaryVoteCandidate: Candidate | null;
+
+let activeBallotPaper: BallotPaper | null;
 
 function set(voteType: VoteType, candidate: Candidate | null) {
   if (voteType === VoteType.FIRST_VOTE) {
@@ -95,6 +98,23 @@ function save() {
 
   if (secondaryVoteCandidate) secondaryVoteCandidate.electionStats.points += 1;
 
+  let newBallotPaper = {
+    id: crypto.randomUUID(),
+    ballotPaperNumber: activeBallotPaper
+      ? activeBallotPaper.ballotPaperNumber
+      : ballotPapers.filter((obj) => obj.isActive).length + 1,
+    isActive: true,
+    primaryVoteCandidate: primaryVoteCandidate,
+    secondaryVoteCandidate: secondaryVoteCandidate,
+  } as BallotPaper;
+
+  ballotPapers.push(newBallotPaper);
+  ballotPapers.toReversed();
+
+  if (activeBallotPaper) {
+    activeBallotPaper.isActive = false;
+  }
+
   reset();
 }
 
@@ -106,6 +126,8 @@ function reset() {
 
   primaryVoteCandidate = null;
   secondaryVoteCandidate = null;
+
+  activeBallotPaper = null;
 
   for (let candidate of candidates) {
     candidate.primaryVoteChecked = false;
@@ -150,6 +172,7 @@ function reset() {
       <div ref="refs" v-for="ballotPaper in ballotPapers">
         <BallotPaperDisplay
           :ballot-paper="ballotPaper"
+          :disabled="activeBallotPaper !== null"
           @primary-vote="
             (candidate: Candidate) => {
               set(VoteType.FIRST_VOTE, candidate);
@@ -158,6 +181,11 @@ function reset() {
           @secondary-vote="
             (candidate: Candidate) => {
               set(VoteType.SECONDARY_VOTE, candidate);
+            }
+          "
+          @active-ballot-paper="
+            (ballotPaper: BallotPaper) => {
+              activeBallotPaper = ballotPaper;
             }
           "
         ></BallotPaperDisplay>

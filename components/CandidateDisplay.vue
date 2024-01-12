@@ -93,7 +93,6 @@ function change(voteType: VoteType) {
   border-radius: 5px;
   padding: 20px;
   margin: 10px;
-  background-color: #dddddd;
   width: 300px;
 
   display: flex;
