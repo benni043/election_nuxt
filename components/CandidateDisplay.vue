@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { type Candidate, VoteType } from "~/utils/types";
-import type { UUID } from "node:crypto";
+import {type Candidate, VoteType} from "~/utils/types";
 
 let props = defineProps<{
   candidate: Candidate;
@@ -36,51 +35,50 @@ function change(voteType: VoteType) {
     <div id="field">
       <div>
         <input
-          :disabled="
+            :disabled="
             (!props.isPrimaryVoteClicked &&
               !props.candidate.primaryVoteChecked) ||
             props.candidate.secondaryVoteChecked
           "
-          v-model="props.candidate.primaryVoteChecked"
-          type="checkbox"
-          name="firstVote"
-          id="firstVote"
-          @change="change(VoteType.FIRST_VOTE)"
+            v-model="props.candidate.primaryVoteChecked"
+            type="checkbox"
+            name="firstVote"
+            id="firstVote"
+            @change="change(VoteType.FIRST_VOTE)"
         />
         <label
-          :class="{
+            :class="{
             disabled:
               (!props.isPrimaryVoteClicked &&
                 !props.candidate.primaryVoteChecked) ||
               props.candidate.secondaryVoteChecked,
           }"
-          for="firstVote"
-          >Erststimme</label
-        >
+            for="firstVote"
+        >Erststimme</label>
       </div>
 
       <div>
         <input
-          :disabled="
+            :disabled="
             (!props.isSecondaryVoteClicked &&
               !props.candidate.secondaryVoteChecked) ||
             props.candidate.primaryVoteChecked
           "
-          v-model="props.candidate.secondaryVoteChecked"
-          type="checkbox"
-          name="secondaryVote"
-          id="secondaryVote"
-          @change="change(VoteType.SECONDARY_VOTE)"
+            v-model="props.candidate.secondaryVoteChecked"
+            type="checkbox"
+            name="secondaryVote"
+            id="secondaryVote"
+            @change="change(VoteType.SECONDARY_VOTE)"
         />
         <label
-          :class="{
+            :class="{
             disabled:
               (!props.isSecondaryVoteClicked &&
                 !props.candidate.secondaryVoteChecked) ||
               props.candidate.primaryVoteChecked,
           }"
-          for="secondaryVote"
-          >Zweitstimme</label
+            for="secondaryVote"
+        >Zweitstimme</label
         >
       </div>
     </div>

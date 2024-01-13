@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BallotPaper, Candidate } from "~/utils/types";
+import type {BallotPaper, Candidate} from "~/utils/types";
 
 let props = defineProps<{
   ballotPaper: BallotPaper;
@@ -29,8 +29,8 @@ function change() {
   }
 
   if (
-    props.ballotPaper.primaryVoteCandidate ||
-    props.ballotPaper.secondaryVoteCandidate
+      props.ballotPaper.primaryVoteCandidate ||
+      props.ballotPaper.secondaryVoteCandidate
   ) {
     emit("activeBallotPaper", props.ballotPaper);
   }
@@ -39,8 +39,7 @@ function change() {
 
 <template>
   <div id="outer" :class="{ inActive: !props.ballotPaper.isActive }">
-    <div id="head">{{ props.ballotPaper.id }}</div>
-    <div id="head2">Wahlkarte: {{ props.ballotPaper.ballotPaperNumber }}</div>
+    <div id="head">Wahlkarte: {{ props.ballotPaper.ballotPaperNumber }}</div>
 
     <div class="data">
       <div v-if="props.ballotPaper.primaryVoteCandidate">
@@ -52,6 +51,8 @@ function change() {
         </div>
       </div>
 
+      <br>
+
       <div v-if="props.ballotPaper.secondaryVoteCandidate">
         <div class="innerHead">Zweitstimme:</div>
         <div>
@@ -62,18 +63,19 @@ function change() {
       </div>
     </div>
 
-    <button
-      @click="change"
-      :disabled="!props.ballotPaper.isActive || props.disabled"
-    >
-      Ändern
-    </button>
+    <div id="buttonCenter">
+      <button
+          @click="change"
+          :disabled="!props.ballotPaper.isActive || props.disabled">
+        Ändern
+      </button>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .inActive {
-  background: #cccccc !important;
+  background: #dddddd !important;
 }
 
 #outer {
@@ -84,16 +86,13 @@ function change() {
 
   display: flex;
   flex-direction: column;
+
+  width: 200px;
 }
 
 #head {
+  text-align: center;
   font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-#head2 {
-  font-size: 16px;
   font-weight: bold;
   margin-bottom: 10px;
 }
@@ -106,5 +105,35 @@ function change() {
 .data {
   font-size: 18px;
   margin-bottom: 10px;
+}
+
+#buttonCenter {
+  display: flex;
+  justify-content: center;
+}
+
+button {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin: 5px;
+  width: 150px;
+  background-color: #fff;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s,
+  color 0.3s;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  border: 1px solid #999999;
+  color: #888888;
+  cursor: default;
 }
 </style>

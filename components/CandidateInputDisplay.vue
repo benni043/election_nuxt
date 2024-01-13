@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Candidate, ElectionStats } from "~/utils/types";
+import type {Candidate, ElectionStats} from "~/utils/types";
 
-let firstName: string = "";
-let lastName: string = "";
-let schoolClass: string = "";
+let firstName = ref("");
+let lastName = ref("");
+let schoolClass = ref("");
 
 let emit = defineEmits<{
   candidate: [candidate: Candidate];
@@ -12,9 +12,9 @@ let emit = defineEmits<{
 function submitForm() {
   let candidate = {
     id: crypto.randomUUID(),
-    firstName: firstName,
-    lastName: lastName,
-    schoolClass: schoolClass,
+    firstName: firstName.value,
+    lastName: lastName.value,
+    schoolClass: schoolClass.value,
 
     primaryVoteChecked: false,
     secondaryVoteChecked: false,
@@ -27,9 +27,9 @@ function submitForm() {
 
   emit("candidate", candidate);
 
-  firstName = "";
-  lastName = "";
-  schoolClass = "";
+  firstName.value = "";
+  lastName.value = "";
+  schoolClass.value = "";
 }
 </script>
 
@@ -38,15 +38,15 @@ function submitForm() {
     <form @submit.prevent="submitForm" class="form">
       <div class="form-group">
         <label for="firstName">Vorname:</label>
-        <input type="text" id="firstName" v-model="firstName" />
+        <input type="text" id="firstName" v-model="firstName"/>
       </div>
       <div class="form-group">
         <label for="lastName">Nachname:</label>
-        <input type="text" id="lastName" v-model="lastName" />
+        <input type="text" id="lastName" v-model="lastName"/>
       </div>
       <div class="form-group">
         <label for="schoolClass">Klasse:</label>
-        <input type="text" id="schoolClass" v-model="schoolClass" />
+        <input type="text" id="schoolClass" v-model="schoolClass"/>
       </div>
       <button type="submit">Bestätigen</button>
     </form>
@@ -101,9 +101,8 @@ button {
   width: 300px;
   font-weight: bold;
   cursor: pointer;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
+  transition: background-color 0.3s,
+  color 0.3s;
 }
 
 button:hover {
