@@ -7,6 +7,28 @@ let candidatesStore = useCandidateStore();
 function start() {
   return navigateTo("/VotePage");
 }
+
+let selectedFile: File;
+
+function handleFileChange(event: any) {
+  selectedFile = event.target.files[0];
+}
+
+function restore() {
+  if (selectedFile) {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        const importedData = JSON.parse(reader.result);
+        console.log(importedData)
+      }
+    };
+    reader.readAsText(selectedFile);
+  } else {
+    console.error('No file selected');
+  }
+}
 </script>
 
 <template>
@@ -24,6 +46,8 @@ function start() {
       </CandidateInputDisplay>
 
       <button @click="start">Wahl starten</button>
+      <button @click="restore">restore former election</button>
+      <input type="file" @change="handleFileChange($event)"/>
     </div>
 
     <div id="addedCandidates">
