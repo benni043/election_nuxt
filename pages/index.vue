@@ -24,7 +24,7 @@ let candidatesStore = useCandidateStore();
   </div>
 
   <div id="addedCandidates">
-    <div v-for="addedCandidate in candidatesStore">
+    <div v-for="addedCandidate in candidatesStore.candidates">
       <AddedCandidateDisplay
           :added-candidate="addedCandidate"
           @delete="(candidate: Candidate) => {
