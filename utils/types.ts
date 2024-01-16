@@ -24,6 +24,12 @@ export enum VoteType {
   SECONDARY_VOTE,
 }
 
+export enum DisplayState {
+  VOTE_BEFORE,
+  VOTE,
+  VOTE_AFTER
+}
+
 export interface BallotPaper {
   id: UUID;
   ballotPaperNumber: number;

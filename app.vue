@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import {
-  type BallotPaper,
-  type Candidate,
-  type ElectionStats,
-  VoteType,
-} from "~/utils/types";
-import type {UUID} from "node:crypto";
+import {type BallotPaper, type Candidate, DisplayState, type ElectionStats, VoteType,} from "~/utils/types";
 import CandidateDisplay from "~/components/CandidateDisplay.vue";
 
 let candidates = reactive<Candidate[]>([]);
@@ -70,14 +64,14 @@ let isSecondaryVoteClicked = ref(true);
 
 let canSave = ref(false);
 
-let voteStarted = ref(true);
+let displayState = ref(DisplayState.VOTE_BEFORE);
 
 let primaryVoteCandidate: Candidate | null;
 let secondaryVoteCandidate: Candidate | null;
 
 let activeBallotPaper: BallotPaper | null;
 
-init();
+// init();
 
 function init() {
   let candidateUnknown = {
@@ -99,7 +93,7 @@ function init() {
 
   candidates.splice(0, 0, candidateUnknown);
 
-  add();
+  // add();
 }
 
 function set(voteType: VoteType, candidate: Candidate | null) {
@@ -159,35 +153,51 @@ function reset() {
 }
 
 function voteEnd() {
-  reset();
-
-  candidates = [];
-  ballotPapers = [];
-
-  voteStarted.value = false;
+  displayState.value = DisplayState.VOTE_AFTER;
 
   getStats();
 }
 
 function voteStart() {
   init();
-  voteStarted.value = true;
+  displayState.value = DisplayState.VOTE;
+}
+
+function showEnd() {
+  candidates = reactive<Candidate[]>([]);
+  ballotPapers = reactive<BallotPaper[]>([]);
+
+  displayState.value = DisplayState.VOTE_BEFORE;
 }
 
 function getStats() {
-  let allVoteCount = ballotPapers.filter((obj) => obj.isActive).length;
-  let invalidPrimaryVoteCount = ballotPapers.filter((obj) => obj.primaryVoteCandidate?.lastName === "Ungültig").length;
-  let invalidSecondaryVoteCount = ballotPapers.filter((obj) => obj.secondaryVoteCandidate?.lastName === "Ungültig").length;
+  let validVoteCount = ballotPapers.filter((obj) => (!obj.primaryVoteCandidate?.canDoubleVote || !obj.secondaryVoteCandidate?.canDoubleVote)).length;
+  let invalidVoteCount = ballotPapers.filter((obj) => (obj.primaryVoteCandidate?.canDoubleVote && obj.secondaryVoteCandidate?.canDoubleVote)).length;
 
-  console.log(allVoteCount);
-  console.log(invalidPrimaryVoteCount);
-  console.log(invalidSecondaryVoteCount);
+  console.log("Gültige Stimmen: " + validVoteCount);
+  console.log("Ungültige Stimmen: " + invalidVoteCount);
+}
+
+function exportData() {
+  const jsonString = JSON.stringify(candidates, null, 2);
+
+  const blob = new Blob([jsonString], {type: "application/json"});
+
+  const downloadLink = document.createElement('a');
+  downloadLink.href = window.URL.createObjectURL(blob);
+  downloadLink.download = 'candidates.json';
+
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
 }
 </script>
 
 <template>
   <div id="outer">
-    <div id="candidateInput" v-if="!voteStarted">
+    <button @click="exportData">export</button>
+
+    <div id="candidateInput" v-if="displayState === DisplayState.VOTE_BEFORE">
       <div id="input">
         <h1>
           Fügen Sie hier bitte die Wahlkandidaten hinzu!
@@ -215,7 +225,7 @@ function getStats() {
       </div>
     </div>
 
-    <div v-if="voteStarted" id="candidateShow">
+    <div id="candidateShow" v-if="displayState === DisplayState.VOTE">
       <div id="candidates">
         <div ref="refs" v-for="candidate in candidates">
           <CandidateDisplay
@@ -265,6 +275,18 @@ function getStats() {
         </div>
       </div>
     </div>
+
+    <div id="endShow" v-if="displayState === DisplayState.VOTE_AFTER">
+      <div id="endCandidate">
+        <div v-for="endCandidate in candidates">
+          <EndCadidateDisplay :candidate="endCandidate">
+          </EndCadidateDisplay>
+        </div>
+      </div>
+
+      <button @click="showEnd">Beenden</button>
+    </div>
+
   </div>
 </template>
 
@@ -275,7 +297,7 @@ function getStats() {
   justify-content: space-around;
 }
 
-#candidateShow, #candidateInput {
+#candidateShow, #candidateInput, #endShow {
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -283,7 +305,11 @@ function getStats() {
   align-items: center;
 }
 
-#candidates, #ballotPapers, #addedCandidates {
+#endShow {
+  flex-direction: column;
+}
+
+#candidates, #ballotPapers, #addedCandidates, #endCandidate {
   display: flex;
   flex-direction: column;
 
