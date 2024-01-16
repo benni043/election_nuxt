@@ -28,23 +28,68 @@ function exportData() {
   document.body.removeChild(downloadLink);
 }
 
+function end() {
+  candidateStore.candidates.splice(0, candidateStore.candidates.length);
+  ballotPaperStore.ballotPapers.splice(0, ballotPaperStore.ballotPapers.length);
+
+  return navigateTo("/");
+}
+
 getStats();
 
 </script>
 
 <template>
-  <div id="outer">
+  <div id="endShow">
+    <button @click="end">Beenden</button>
+
     <div id="endCandidate">
-      <div v-for="endCandidate in candidateStore">
-        <EndCadidateDisplay :candidate="endCandidate">
-        </EndCadidateDisplay>
+      <div v-for="endCandidate in candidateStore.candidates" :key="endCandidate">
+        <EndCadidateDisplay :candidate="endCandidate"></EndCadidateDisplay>
       </div>
     </div>
-
-    <nuxt-link href="/">Beenden</nuxt-link>
   </div>
 </template>
 
 <style scoped>
 
+#endShow {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#endCandidate {
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+  overflow: scroll;
+}
+
+button {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin: 20px;
+  width: 150px;
+  background-color: #fff;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  color: #888888;
+  cursor: default;
+}
 </style>

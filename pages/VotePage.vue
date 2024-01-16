@@ -2,6 +2,7 @@
 import {type BallotPaper, type Candidate, type ElectionStats, VoteType} from "~/utils/types";
 import {useCandidateStore} from "~/stores/useCandidateStore";
 import {useBallotPaperStore} from "~/stores/useBallotPaperStore";
+import CandidateDisplay from "~/components/CandidateDisplay.vue";
 
 let candidateStore = useCandidateStore();
 let ballotPaperStore = useBallotPaperStore();
@@ -11,12 +12,13 @@ let isSecondaryVoteClicked = ref(true);
 
 let canSave = ref(false);
 
-let primaryVoteCandidate: Candidate | null;
-let secondaryVoteCandidate: Candidate | null;
+let primaryVoteCandidate: Candidate | null = null;
+let secondaryVoteCandidate: Candidate | null = null;
 
-let activeBallotPaper: BallotPaper | null;
+let activeBallotPaper: BallotPaper | null = null;
 
 function set(voteType: VoteType, candidate: Candidate | null) {
+  console.log(0)
   if (voteType === VoteType.FIRST_VOTE) {
     isPrimaryVoteClicked.value = !isPrimaryVoteClicked.value;
     primaryVoteCandidate = isPrimaryVoteClicked.value ? null : candidate;
@@ -29,6 +31,7 @@ function set(voteType: VoteType, candidate: Candidate | null) {
 }
 
 function save() {
+  console.log(1)
   if (primaryVoteCandidate) {
     primaryVoteCandidate.electionStats.points += 2;
     primaryVoteCandidate.electionStats.numberOfFirstVotes += 1;
@@ -58,6 +61,7 @@ function save() {
 }
 
 function reset() {
+  console.log(2)
   isPrimaryVoteClicked.value = true;
   isSecondaryVoteClicked.value = true;
 
@@ -74,7 +78,14 @@ function reset() {
   }
 }
 
+function result() {
+  console.log(3)
+  return navigateTo("/ResultPage")
+}
+
 function init() {
+  console.log(4)
+  console.log(activeBallotPaper)
   let candidateUnknown = {
     id: crypto.randomUUID(),
     lastName: "Ungültig",
@@ -95,16 +106,16 @@ function init() {
   candidateStore.candidates.splice(0, 0, candidateUnknown);
 }
 
-init();
+callOnce(() => init());
 
 </script>
 
 <template>
-  <div id="outer">
+  <div id="candidateShow">
     <div id="candidates">
-      <div ref="refs" v-for="candidateInner in candidateStore.candidates" :key="candidateInner">
+      <div ref="refs" v-for="candidate in candidateStore.candidates" :key="candidate">
         <CandidateDisplay
-            :candidate="candidateInner"
+            :candidate="candidate"
             :is-primary-vote-clicked="isPrimaryVoteClicked"
             :is-secondary-vote-clicked="isSecondaryVoteClicked"
             @primary-vote="
@@ -123,11 +134,11 @@ init();
 
     <div id="buttons">
       <button :disabled="!canSave" @click="save">Speichern</button>
-      <nuxt-link :disabled="activeBallotPaper !== null" href="/resultPage">Wahl beenden</nuxt-link>
+      <button :disabled="activeBallotPaper !== null" @click="result">Wahl beenden</button>
     </div>
 
     <div id="ballotPapers">
-      <div ref="refs" v-for="ballotPaper in ballotPaperStore.ballotPapers.slice().reverse()">
+      <div ref="refs" v-for="ballotPaper in ballotPaperStore.ballotPapers.slice().reverse()" :key="ballotPaper">
         <BallotPaperDisplay
             :ballot-paper="ballotPaper"
             :disabled="activeBallotPaper !== null"
@@ -152,10 +163,13 @@ init();
   </div>
 </template>
 
-<style scoped>
-#outer {
+<style scoped lang="scss">
+
+#candidateShow {
+  height: 100vh;
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 
 #candidates, #ballotPapers {
@@ -166,12 +180,11 @@ init();
   overflow: scroll;
 }
 
-#outer {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+#candidateShow {
+  #buttons {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 button {
@@ -184,8 +197,8 @@ button {
   color: black;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s,
-  color 0.3s;
+  transition: background-color 0.3s;
+  text-decoration: none;
 }
 
 button:hover {

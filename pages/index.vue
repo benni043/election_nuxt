@@ -5,37 +5,51 @@ import {useCandidateStore} from "~/stores/useCandidateStore";
 
 let candidatesStore = useCandidateStore();
 
+function start() {
+  return navigateTo('/VotePage');
+}
+
 </script>
 
 <template>
-  <div id="outer">
-    <h1>
-      Fügen Sie hier bitte die Wahlkandidaten hinzu!
-    </h1>
+  <div id="candidateInput">
+    <div id="input">
+      <h1>
+        Fügen Sie hier bitte die Wahlkandidaten hinzu!
+      </h1>
 
-    <CandidateInputDisplay
-        @candidate="
-        (candidate: Candidate) => {
-          candidatesStore.addCandidate(candidate);
-        }">
-    </CandidateInputDisplay>
+      <CandidateInputDisplay
+          @candidate="
+            (candidate: Candidate) => {
+              candidatesStore.addCandidate(candidate);
+            }">
+      </CandidateInputDisplay>
 
-    <nuxt-link class="button" href="VotePage">Wahl starten</nuxt-link>
-  </div>
+      <button @click="start">Wahl starten</button>
+    </div>
 
-  <div id="addedCandidates">
-    <div v-for="addedCandidate in candidatesStore.candidates">
-      <AddedCandidateDisplay
-          :added-candidate="addedCandidate"
-          @delete="(candidate: Candidate) => {
-            candidatesStore.candidates.splice(candidatesStore.candidates.indexOf(candidate), 1);
-          }">
-      </AddedCandidateDisplay>
+    <div id="addedCandidates">
+      <div v-for="addedCandidate in candidatesStore.candidates" :key="addedCandidate">
+        <AddedCandidateDisplay
+            :added-candidate="addedCandidate"
+            @delete="(candidate: Candidate) => {
+                candidatesStore.candidates.splice(candidatesStore.candidates.indexOf(candidate), 1);
+              }">
+        </AddedCandidateDisplay>
+      </div>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+
+#candidateInput {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
 
 #addedCandidates {
   display: flex;
@@ -45,17 +59,15 @@ let candidatesStore = useCandidateStore();
   overflow: scroll;
 }
 
-#outer {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+#candidateInput {
+  #input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
-.button {
-  text-align: center;
+button {
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -69,11 +81,11 @@ let candidatesStore = useCandidateStore();
   text-decoration: none;
 }
 
-.button:hover {
+button:hover {
   background-color: #ddd;
 }
 
-.button:disabled {
+button:disabled {
   background-color: #cccccc;
   color: #888888;
   cursor: default;
