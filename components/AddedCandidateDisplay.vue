@@ -1,19 +1,17 @@
 <script setup lang="ts">
-
-import type {Candidate} from "~/utils/types";
+import type { Candidate } from "~/utils/types";
 
 let props = defineProps<{
   addedCandidate: Candidate;
 }>();
 
 let emit = defineEmits<{
-  delete: [addedCandidate: Candidate]
+  delete: [addedCandidate: Candidate];
 }>();
 
 function deleteAddedCandidate() {
   emit("delete", props.addedCandidate);
 }
-
 </script>
 
 <template>
@@ -56,8 +54,9 @@ button {
   color: black;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s,
-  color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 button:hover {

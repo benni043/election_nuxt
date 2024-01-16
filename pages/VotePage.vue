@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import {type BallotPaper, type Candidate, type ElectionStats, VoteType} from "~/utils/types";
-import {useCandidateStore} from "~/stores/useCandidateStore";
-import {useBallotPaperStore} from "~/stores/useBallotPaperStore";
+import {
+  type BallotPaper,
+  type Candidate,
+  type ElectionStats,
+  VoteType,
+} from "~/utils/types";
+import { useCandidateStore } from "~/stores/useCandidateStore";
+import { useBallotPaperStore } from "~/stores/useBallotPaperStore";
 import CandidateDisplay from "~/components/CandidateDisplay.vue";
 
 let candidateStore = useCandidateStore();
@@ -42,8 +47,8 @@ function save() {
   let newBallotPaper = {
     id: crypto.randomUUID(),
     ballotPaperNumber: activeBallotPaper
-        ? activeBallotPaper.ballotPaperNumber
-        : ballotPaperStore.ballotPapers.filter((obj) => obj.isActive).length + 1,
+      ? activeBallotPaper.ballotPaperNumber
+      : ballotPaperStore.ballotPapers.filter((obj) => obj.isActive).length + 1,
     isActive: true,
     primaryVoteCandidate: primaryVoteCandidate,
     secondaryVoteCandidate: secondaryVoteCandidate,
@@ -76,27 +81,31 @@ function reset() {
 }
 
 function result() {
-  return navigateTo("/ResultPage")
+  return navigateTo("/ResultPage");
 }
 
 callOnce(() => candidateStore.init());
-
 </script>
 
 <template>
   <div id="candidateShow">
     <div id="candidates">
-      <div ref="refs" v-for="candidate in candidateStore.candidates" :key="candidate">
+      <div
+        ref="refs"
+        v-for="candidate in candidateStore.candidates"
+        :key="candidate"
+      >
         <CandidateDisplay
-            :candidate="candidate"
-            :is-primary-vote-clicked="isPrimaryVoteClicked"
-            :is-secondary-vote-clicked="isSecondaryVoteClicked"
-            @primary-vote="
+          :candidate="candidate"
+          :is-primary-vote-clicked="isPrimaryVoteClicked"
+          :is-secondary-vote-clicked="isSecondaryVoteClicked"
+          :can-double-vote="candidate.lastName === 'Ungültig'"
+          @primary-vote="
             (candidate: Candidate) => {
               set(VoteType.FIRST_VOTE, candidate);
             }
           "
-            @secondary-vote="
+          @secondary-vote="
             (candidate: Candidate) => {
               set(VoteType.SECONDARY_VOTE, candidate);
             }
@@ -107,25 +116,31 @@ callOnce(() => candidateStore.init());
 
     <div id="buttons">
       <button :disabled="!canSave" @click="save">Speichern</button>
-      <button :disabled="activeBallotPaper !== null" @click="result">Wahl beenden</button>
+      <button :disabled="activeBallotPaper !== null" @click="result">
+        Wahl beenden
+      </button>
     </div>
 
     <div id="ballotPapers">
-      <div ref="refs" v-for="ballotPaper in ballotPaperStore.ballotPapers.slice().reverse()" :key="ballotPaper">
+      <div
+        ref="refs"
+        v-for="ballotPaper in ballotPaperStore.ballotPapers.slice().reverse()"
+        :key="ballotPaper"
+      >
         <BallotPaperDisplay
-            :ballot-paper="ballotPaper"
-            :disabled="activeBallotPaper !== null"
-            @primary-vote="
+          :ballot-paper="ballotPaper"
+          :disabled="activeBallotPaper !== null"
+          @primary-vote="
             (candidate: Candidate) => {
               set(VoteType.FIRST_VOTE, candidate);
             }
           "
-            @secondary-vote="
+          @secondary-vote="
             (candidate: Candidate) => {
               set(VoteType.SECONDARY_VOTE, candidate);
             }
           "
-            @active-ballot-paper="
+          @active-ballot-paper="
             (ballotPaper: BallotPaper) => {
               activeBallotPaper = ballotPaper;
             }
@@ -137,7 +152,6 @@ callOnce(() => candidateStore.init());
 </template>
 
 <style scoped lang="scss">
-
 #candidateShow {
   height: 100vh;
   display: flex;
@@ -145,7 +159,8 @@ callOnce(() => candidateStore.init());
   align-items: center;
 }
 
-#candidates, #ballotPapers {
+#candidates,
+#ballotPapers {
   display: flex;
   flex-direction: column;
 

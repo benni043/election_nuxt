@@ -10,8 +10,6 @@ export interface Candidate {
   secondaryVoteChecked: boolean;
 
   electionStats: ElectionStats;
-
-  canDoubleVote: boolean;
 }
 
 export interface ElectionStats {

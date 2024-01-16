@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {BallotPaper, Candidate} from "~/utils/types";
+import type { BallotPaper, Candidate } from "~/utils/types";
 
 let props = defineProps<{
   ballotPaper: BallotPaper;
@@ -29,8 +29,8 @@ function change() {
   }
 
   if (
-      props.ballotPaper.primaryVoteCandidate ||
-      props.ballotPaper.secondaryVoteCandidate
+    props.ballotPaper.primaryVoteCandidate ||
+    props.ballotPaper.secondaryVoteCandidate
   ) {
     emit("activeBallotPaper", props.ballotPaper);
   }
@@ -48,7 +48,6 @@ function remove() {
 
   props.ballotPaper.isActive = false;
 }
-
 </script>
 
 <template>
@@ -65,7 +64,7 @@ function remove() {
         </div>
       </div>
 
-      <br>
+      <br />
 
       <div v-if="props.ballotPaper.secondaryVoteCandidate">
         <div class="innerHead">Zweitstimme:</div>
@@ -79,12 +78,15 @@ function remove() {
 
     <div id="buttonCenter">
       <button
-          @click="change"
-          :disabled="!props.ballotPaper.isActive || props.disabled">
+        @click="change"
+        :disabled="!props.ballotPaper.isActive || props.disabled"
+      >
         Ändern
       </button>
-      <button @click="remove"
-              :disabled="!props.ballotPaper.isActive || props.disabled">
+      <button
+        @click="remove"
+        :disabled="!props.ballotPaper.isActive || props.disabled"
+      >
         Löschen
       </button>
     </div>
@@ -140,8 +142,9 @@ button {
   color: black;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s,
-  color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 button:hover {

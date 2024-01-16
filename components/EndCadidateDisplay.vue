@@ -1,11 +1,9 @@
 <script setup lang="ts">
-
-import type {Candidate} from "~/utils/types";
+import type { Candidate } from "~/utils/types";
 
 let props = defineProps<{
   candidate: Candidate;
 }>();
-
 </script>
 
 <template>

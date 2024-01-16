@@ -1,7 +1,6 @@
 <script setup lang="ts">
-
-import {useCandidateStore} from "~/stores/useCandidateStore";
-import {useBallotPaperStore} from "~/stores/useBallotPaperStore";
+import { useCandidateStore } from "~/stores/useCandidateStore";
+import { useBallotPaperStore } from "~/stores/useBallotPaperStore";
 
 let candidateStore = useCandidateStore();
 let ballotPaperStore = useBallotPaperStore();
@@ -10,26 +9,50 @@ let validVoteCount: number = 0;
 let invalidVoteCount: number = 0;
 
 function getStats() {
-  validVoteCount = ballotPaperStore.ballotPapers.filter((obj) => obj.isActive).filter((obj) => (!obj.primaryVoteCandidate?.canDoubleVote || !obj.secondaryVoteCandidate?.canDoubleVote)).length;
-  invalidVoteCount = ballotPaperStore.ballotPapers.filter((obj) => obj.isActive).filter((obj) => (obj.primaryVoteCandidate?.canDoubleVote && obj.secondaryVoteCandidate?.canDoubleVote)).length;
+  validVoteCount = ballotPaperStore.ballotPapers
+    .filter((obj) => obj.isActive)
+    .filter(
+      (obj) =>
+        !obj.primaryVoteCandidate?.canDoubleVote ||
+        !obj.secondaryVoteCandidate?.canDoubleVote,
+    ).length;
+  invalidVoteCount = ballotPaperStore.ballotPapers
+    .filter((obj) => obj.isActive)
+    .filter(
+      (obj) =>
+        obj.primaryVoteCandidate?.canDoubleVote &&
+        obj.secondaryVoteCandidate?.canDoubleVote,
+    ).length;
 }
 
 function exportCandidates() {
-  const jsonStringCandidate = JSON.stringify(candidateStore.candidates, null, 2);
-  const blobCandidate = new Blob([jsonStringCandidate], {type: "application/json"});
+  const jsonStringCandidate = JSON.stringify(
+    candidateStore.candidates,
+    null,
+    2,
+  );
+  const blobCandidate = new Blob([jsonStringCandidate], {
+    type: "application/json",
+  });
 
-  download(blobCandidate, "candidates")
+  download(blobCandidate, "candidates");
 }
 
 function exportBallotPapers() {
-  const jsonStringBallotPaper = JSON.stringify(ballotPaperStore.ballotPapers, null, 2);
-  const blobBallotPaper = new Blob([jsonStringBallotPaper], {type: "application/json"});
+  const jsonStringBallotPaper = JSON.stringify(
+    ballotPaperStore.ballotPapers,
+    null,
+    2,
+  );
+  const blobBallotPaper = new Blob([jsonStringBallotPaper], {
+    type: "application/json",
+  });
 
   download(blobBallotPaper, "ballots");
 }
 
 function download(blob: Blob, fileName: string) {
-  const downloadLink = document.createElement('a');
+  const downloadLink = document.createElement("a");
   downloadLink.href = window.URL.createObjectURL(blob);
   downloadLink.download = fileName + ".json";
 
@@ -49,7 +72,6 @@ function end() {
 }
 
 getStats();
-
 </script>
 
 <template>
@@ -66,7 +88,10 @@ getStats();
     </div>
 
     <div id="endCandidate">
-      <div v-for="endCandidate in candidateStore.candidates" :key="endCandidate">
+      <div
+        v-for="endCandidate in candidateStore.candidates"
+        :key="endCandidate"
+      >
         <EndCadidateDisplay :candidate="endCandidate"></EndCadidateDisplay>
       </div>
     </div>
@@ -74,7 +99,6 @@ getStats();
 </template>
 
 <style scoped>
-
 #endShow {
   height: 100vh;
   width: 100vw;

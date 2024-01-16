@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import {type Candidate, VoteType} from "~/utils/types";
+import { type Candidate, VoteType } from "~/utils/types";
 
 let props = defineProps<{
   candidate: Candidate;
   isPrimaryVoteClicked: boolean;
   isSecondaryVoteClicked: boolean;
+  canDoubleVote: boolean;
 }>();
 
 let emit = defineEmits<{
@@ -32,49 +33,54 @@ function change(voteType: VoteType) {
       </div>
     </div>
 
-    <!--            :disabled="-->
-    <!--              ((!props.isPrimaryVoteClicked &&-->
-    <!--                !props.candidate.primaryVoteChecked) ||-->
-    <!--              props.candidate.secondaryVoteChecked)-->
-    <!--          "-->
-
     <div id="field">
       <div>
         <input
-            :disabled="(!props.isPrimaryVoteClicked && !props.candidate.primaryVoteChecked) || (props.candidate.secondaryVoteChecked && !props.candidate.canDoubleVote)"
-
-            v-model="props.candidate.primaryVoteChecked"
-            type="checkbox"
-            name="firstVote"
-            id="firstVote"
-            @change="change(VoteType.FIRST_VOTE)"
+          :disabled="
+            (!props.isPrimaryVoteClicked &&
+              !props.candidate.primaryVoteChecked) ||
+            (props.candidate.secondaryVoteChecked && !props.canDoubleVote)
+          "
+          v-model="props.candidate.primaryVoteChecked"
+          type="checkbox"
+          name="firstVote"
+          id="firstVote"
+          @change="change(VoteType.FIRST_VOTE)"
         />
         <label
-            :class="{
+          :class="{
             disabled:
-              (!props.isPrimaryVoteClicked && !props.candidate.primaryVoteChecked) || (props.candidate.secondaryVoteChecked && !props.candidate.canDoubleVote)
+              (!props.isPrimaryVoteClicked &&
+                !props.candidate.primaryVoteChecked) ||
+              (props.candidate.secondaryVoteChecked && !props.canDoubleVote),
           }"
-            for="firstVote"
-        >Erststimme</label>
+          for="firstVote"
+          >Erststimme</label
+        >
       </div>
 
       <div>
         <input
-            :disabled="(!props.isSecondaryVoteClicked && !props.candidate.secondaryVoteChecked) || (props.candidate.primaryVoteChecked && !props.candidate.canDoubleVote)"
-
-            v-model="props.candidate.secondaryVoteChecked"
-            type="checkbox"
-            name="secondaryVote"
-            id="secondaryVote"
-            @change="change(VoteType.SECONDARY_VOTE)"
+          :disabled="
+            (!props.isSecondaryVoteClicked &&
+              !props.candidate.secondaryVoteChecked) ||
+            (props.candidate.primaryVoteChecked && !props.canDoubleVote)
+          "
+          v-model="props.candidate.secondaryVoteChecked"
+          type="checkbox"
+          name="secondaryVote"
+          id="secondaryVote"
+          @change="change(VoteType.SECONDARY_VOTE)"
         />
         <label
-            :class="{
+          :class="{
             disabled:
-              (!props.isSecondaryVoteClicked && !props.candidate.secondaryVoteChecked) || (props.candidate.primaryVoteChecked && !props.candidate.canDoubleVote)
+              (!props.isSecondaryVoteClicked &&
+                !props.candidate.secondaryVoteChecked) ||
+              (props.candidate.primaryVoteChecked && !props.canDoubleVote),
           }"
-            for="secondaryVote"
-        >Zweitstimme</label
+          for="secondaryVote"
+          >Zweitstimme</label
         >
       </div>
     </div>
