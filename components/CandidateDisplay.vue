@@ -36,9 +36,9 @@ function change(voteType: VoteType) {
       <div>
         <input
             :disabled="
-            (!props.isPrimaryVoteClicked &&
-              !props.candidate.primaryVoteChecked) ||
-            props.candidate.secondaryVoteChecked
+              ((!props.isPrimaryVoteClicked &&
+                !props.candidate.primaryVoteChecked) ||
+              props.candidate.secondaryVoteChecked)
           "
             v-model="props.candidate.primaryVoteChecked"
             type="checkbox"
@@ -49,9 +49,9 @@ function change(voteType: VoteType) {
         <label
             :class="{
             disabled:
-              (!props.isPrimaryVoteClicked &&
+              ((!props.isPrimaryVoteClicked &&
                 !props.candidate.primaryVoteChecked) ||
-              props.candidate.secondaryVoteChecked,
+              props.candidate.secondaryVoteChecked) && !props.candidate.canDoubleVote,
           }"
             for="firstVote"
         >Erststimme</label>
@@ -60,9 +60,9 @@ function change(voteType: VoteType) {
       <div>
         <input
             :disabled="
-            (!props.isSecondaryVoteClicked &&
+            ((!props.isSecondaryVoteClicked &&
               !props.candidate.secondaryVoteChecked) ||
-            props.candidate.primaryVoteChecked
+            props.candidate.primaryVoteChecked) && !props.candidate.canDoubleVote
           "
             v-model="props.candidate.secondaryVoteChecked"
             type="checkbox"
@@ -73,9 +73,9 @@ function change(voteType: VoteType) {
         <label
             :class="{
             disabled:
-              (!props.isSecondaryVoteClicked &&
-                !props.candidate.secondaryVoteChecked) ||
-              props.candidate.primaryVoteChecked,
+              ((!props.isSecondaryVoteClicked &&
+              !props.candidate.secondaryVoteChecked) ||
+            props.candidate.primaryVoteChecked) && !props.candidate.canDoubleVote
           }"
             for="secondaryVote"
         >Zweitstimme</label

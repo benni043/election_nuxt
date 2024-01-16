@@ -10,6 +10,8 @@ let emit = defineEmits<{
 }>();
 
 function submitForm() {
+  if (!isValid(firstName.value, lastName.value, schoolClass.value)) return;
+
   let candidate = {
     id: crypto.randomUUID(),
     firstName: firstName.value,
@@ -23,10 +25,21 @@ function submitForm() {
       points: 0,
       numberOfFirstVotes: 0,
     } as ElectionStats,
+
+    canDoubleVote: false
   } as Candidate;
 
   emit("candidate", candidate);
 
+  reset();
+}
+
+function isValid(firstName: string, lastName: string, schoolClass: string): boolean {
+  return !(!firstName || !lastName || !schoolClass);
+
+}
+
+function reset() {
   firstName.value = "";
   lastName.value = "";
   schoolClass.value = "";

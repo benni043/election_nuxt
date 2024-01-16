@@ -35,6 +35,20 @@ function change() {
     emit("activeBallotPaper", props.ballotPaper);
   }
 }
+
+function remove() {
+  if (props.ballotPaper.primaryVoteCandidate) {
+    props.ballotPaper.primaryVoteCandidate.electionStats.points -= 2;
+    props.ballotPaper.primaryVoteCandidate.electionStats.numberOfFirstVotes -= 1;
+  }
+
+  if (props.ballotPaper.secondaryVoteCandidate) {
+    props.ballotPaper.secondaryVoteCandidate.electionStats.points -= 1;
+  }
+
+  props.ballotPaper.isActive = false;
+}
+
 </script>
 
 <template>
@@ -68,6 +82,10 @@ function change() {
           @click="change"
           :disabled="!props.ballotPaper.isActive || props.disabled">
         Ändern
+      </button>
+      <button @click="remove"
+              :disabled="!props.ballotPaper.isActive || props.disabled">
+        Löschen
       </button>
     </div>
   </div>

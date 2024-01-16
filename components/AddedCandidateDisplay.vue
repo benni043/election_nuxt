@@ -33,7 +33,7 @@ function deleteAddedCandidate() {
   border-radius: 5px;
   padding: 10px;
   margin: 10px;
-  width: 150px;
+  width: 300px;
 
   display: flex;
   flex-direction: column;

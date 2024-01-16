@@ -11,65 +11,73 @@ import CandidateDisplay from "~/components/CandidateDisplay.vue";
 let candidates = reactive<Candidate[]>([]);
 let ballotPapers = reactive<BallotPaper[]>([]);
 
-// let candidate1 = {
-//   id: crypto.randomUUID(),
-//   lastName: "Huff",
-//   firstName: "Benedikt",
-//   schoolClass: "4AHIF",
-//
-//   primaryVoteChecked: false,
-//   secondaryVoteChecked: false,
-//
-//   electionStats: {
-//     points: 0,
-//     numberOfFirstVotes: 0,
-//   } as ElectionStats,
-// } as Candidate;
-// let candidate2 = {
-//   id: crypto.randomUUID(),
-//   lastName: "Frischmann",
-//   firstName: "Tobias",
-//   schoolClass: "4AHIF",
-//
-//   primaryVoteChecked: false,
-//   secondaryVoteChecked: false,
-//
-//   electionStats: {
-//     points: 0,
-//     numberOfFirstVotes: 0,
-//   } as ElectionStats,
-// } as Candidate;
-// let candidate3 = {
-//   id: crypto.randomUUID(),
-//   lastName: "Götz",
-//   firstName: "Fabian",
-//   schoolClass: "4AHIF",
-//
-//   primaryVoteChecked: false,
-//   secondaryVoteChecked: false,
-//
-//   electionStats: {
-//     points: 0,
-//     numberOfFirstVotes: 0,
-//   } as ElectionStats,
-// } as Candidate;
+function add() {
+  let candidate1 = {
+    id: crypto.randomUUID(),
+    lastName: "Huff",
+    firstName: "Benedikt",
+    schoolClass: "4AHIF",
 
-// candidates.push(candidate1);
-// candidates.push(candidate2);
-// candidates.push(candidate3);
+    primaryVoteChecked: false,
+    secondaryVoteChecked: false,
 
+    electionStats: {
+      points: 0,
+      numberOfFirstVotes: 0,
+    } as ElectionStats,
+
+    canDoubleVote: false
+  } as Candidate;
+  let candidate2 = {
+    id: crypto.randomUUID(),
+    lastName: "Frischmann",
+    firstName: "Tobias",
+    schoolClass: "4AHIF",
+
+    primaryVoteChecked: false,
+    secondaryVoteChecked: false,
+
+    electionStats: {
+      points: 0,
+      numberOfFirstVotes: 0,
+    } as ElectionStats,
+
+    canDoubleVote: false
+  } as Candidate;
+  let candidate3 = {
+    id: crypto.randomUUID(),
+    lastName: "Götz",
+    firstName: "Fabian",
+    schoolClass: "4AHIF",
+
+    primaryVoteChecked: false,
+    secondaryVoteChecked: false,
+
+    electionStats: {
+      points: 0,
+      numberOfFirstVotes: 0,
+    } as ElectionStats,
+
+    canDoubleVote: false
+  } as Candidate;
+  candidates.push(candidate1);
+  candidates.push(candidate2);
+  candidates.push(candidate3);
+}
 
 let isPrimaryVoteClicked = ref(true);
 let isSecondaryVoteClicked = ref(true);
 
 let canSave = ref(false);
 
-let voteStarted = ref(false);
+let voteStarted = ref(true);
 
 let primaryVoteCandidate: Candidate | null;
 let secondaryVoteCandidate: Candidate | null;
 
 let activeBallotPaper: BallotPaper | null;
+
+init();
 
 function init() {
   let candidateUnknown = {
@@ -85,9 +93,13 @@ function init() {
       points: 0,
       numberOfFirstVotes: 0,
     } as ElectionStats,
+
+    canDoubleVote: true
   } as Candidate;
 
-  candidates.push(candidateUnknown);
+  candidates.splice(0, 0, candidateUnknown);
+
+  add();
 }
 
 function set(voteType: VoteType, candidate: Candidate | null) {
@@ -185,24 +197,25 @@ function getStats() {
             @candidate="
         (candidate: Candidate) => {
           candidates.push(candidate);
-        }
-      "
-        ></CandidateInputDisplay>
+        }">
+        </CandidateInputDisplay>
 
         <button @click="voteStart">Wahl starten</button>
       </div>
 
-      <div>
+      <div id="addedCandidates">
         <div v-for="addedCandidate in candidates">
-          <AddedCandidateDisplay :added-candidate="addedCandidate" @delete="(candidate: Candidate) => {
+          <AddedCandidateDisplay
+              :added-candidate="addedCandidate"
+              @delete="(candidate: Candidate) => {
             candidates.splice(candidates.indexOf(candidate), 1);
-          }"></AddedCandidateDisplay>
+          }">
+          </AddedCandidateDisplay>
         </div>
       </div>
-
     </div>
 
-    <div v-if="voteStarted" id="inner">
+    <div v-if="voteStarted" id="candidateShow">
       <div id="candidates">
         <div ref="refs" v-for="candidate in candidates">
           <CandidateDisplay
@@ -262,25 +275,24 @@ function getStats() {
   justify-content: space-around;
 }
 
-#inner {
+#candidateShow, #candidateInput {
   height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
 
-  #candidates, #ballotPapers {
-    display: flex;
-    flex-direction: column;
+#candidates, #ballotPapers, #addedCandidates {
+  display: flex;
+  flex-direction: column;
 
-    //padding: 10px;
-    //border: 2px solid black;
-    //border-radius: 10px;
+  height: 70vh;
+  overflow: scroll;
+}
 
-    height: 70vh;
-    overflow: scroll;
-  }
 
+#candidateShow {
   #buttons {
     display: flex;
     flex-direction: column;
@@ -288,12 +300,6 @@ function getStats() {
 }
 
 #candidateInput {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-
   #input {
     display: flex;
     flex-direction: column;
