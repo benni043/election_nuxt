@@ -6,27 +6,38 @@ import {useBallotPaperStore} from "~/stores/useBallotPaperStore";
 let candidateStore = useCandidateStore();
 let ballotPaperStore = useBallotPaperStore();
 
-function getStats() {
-  let validVoteCount = ballotPaperStore.ballotPapers.filter((obj) => (!obj.primaryVoteCandidate?.canDoubleVote || !obj.secondaryVoteCandidate?.canDoubleVote)).length;
-  let invalidVoteCount = ballotPaperStore.ballotPapers.filter((obj) => (obj.primaryVoteCandidate?.canDoubleVote && obj.secondaryVoteCandidate?.canDoubleVote)).length;
+let validVoteCount: number = 0;
+let invalidVoteCount: number = 0;
 
-  console.log("Gültige Stimmen: " + validVoteCount);
-  console.log("Ungültige Stimmen: " + invalidVoteCount);
+function getStats() {
+  validVoteCount = ballotPaperStore.ballotPapers.filter((obj) => obj.isActive).filter((obj) => (!obj.primaryVoteCandidate?.canDoubleVote || !obj.secondaryVoteCandidate?.canDoubleVote)).length;
+  invalidVoteCount = ballotPaperStore.ballotPapers.filter((obj) => obj.isActive).filter((obj) => (obj.primaryVoteCandidate?.canDoubleVote && obj.secondaryVoteCandidate?.canDoubleVote)).length;
 }
 
-function exportData() {
-  const jsonString = JSON.stringify(candidateStore, null, 2);
+function exportCandidates() {
+  const jsonStringCandidate = JSON.stringify(candidateStore.candidates, null, 2);
+  const blobCandidate = new Blob([jsonStringCandidate], {type: "application/json"});
 
-  const blob = new Blob([jsonString], {type: "application/json"});
+  download(blobCandidate, "candidates")
+}
 
+function exportBallotPapers() {
+  const jsonStringBallotPaper = JSON.stringify(ballotPaperStore.ballotPapers, null, 2);
+  const blobBallotPaper = new Blob([jsonStringBallotPaper], {type: "application/json"});
+
+  download(blobBallotPaper, "ballots");
+}
+
+function download(blob: Blob, fileName: string) {
   const downloadLink = document.createElement('a');
   downloadLink.href = window.URL.createObjectURL(blob);
-  downloadLink.download = 'candidates.json';
+  downloadLink.download = fileName + ".json";
 
   document.body.appendChild(downloadLink);
   downloadLink.click();
   document.body.removeChild(downloadLink);
 }
+
 
 function end() {
   candidateStore.candidates.splice(0, candidateStore.candidates.length);
@@ -41,7 +52,16 @@ getStats();
 
 <template>
   <div id="endShow">
-    <button @click="end">Beenden</button>
+    <div id="center">
+      <button @click="end">Beenden</button>
+      <button @click="exportCandidates">download candidates</button>
+      <button @click="exportBallotPapers">download ballots</button>
+
+      <div id="data">
+        <div>Gültige Stimmen: {{ validVoteCount }}</div>
+        <div>Ungültige Stimmen: {{ invalidVoteCount }}</div>
+      </div>
+    </div>
 
     <div id="endCandidate">
       <div v-for="endCandidate in candidateStore.candidates" :key="endCandidate">
@@ -69,11 +89,26 @@ getStats();
   overflow: scroll;
 }
 
+#center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  #data {
+    margin: 10px;
+
+    div {
+      text-align: center;
+      font-size: 20px;
+    }
+  }
+}
+
 button {
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
-  margin: 20px;
+  margin: 10px;
   width: 150px;
   background-color: #fff;
   color: black;

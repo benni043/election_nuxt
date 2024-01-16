@@ -18,7 +18,6 @@ let secondaryVoteCandidate: Candidate | null = null;
 let activeBallotPaper: BallotPaper | null = null;
 
 function set(voteType: VoteType, candidate: Candidate | null) {
-  console.log(0)
   if (voteType === VoteType.FIRST_VOTE) {
     isPrimaryVoteClicked.value = !isPrimaryVoteClicked.value;
     primaryVoteCandidate = isPrimaryVoteClicked.value ? null : candidate;
@@ -31,7 +30,6 @@ function set(voteType: VoteType, candidate: Candidate | null) {
 }
 
 function save() {
-  console.log(1)
   if (primaryVoteCandidate) {
     primaryVoteCandidate.electionStats.points += 2;
     primaryVoteCandidate.electionStats.numberOfFirstVotes += 1;
@@ -61,7 +59,6 @@ function save() {
 }
 
 function reset() {
-  console.log(2)
   isPrimaryVoteClicked.value = true;
   isSecondaryVoteClicked.value = true;
 
@@ -79,17 +76,15 @@ function reset() {
 }
 
 function result() {
-  console.log(3)
   return navigateTo("/ResultPage")
 }
 
 function init() {
-  console.log(4)
-  console.log(activeBallotPaper)
+  console.log("troll")
   let candidateUnknown = {
     id: crypto.randomUUID(),
     lastName: "Ungültig",
-    firstName: "",
+    firstName: "Ungültig",
     schoolClass: "Ungültig",
 
     primaryVoteChecked: false,
