@@ -79,29 +79,7 @@ function result() {
   return navigateTo("/ResultPage")
 }
 
-function init() {
-  console.log("troll")
-  let candidateUnknown = {
-    id: crypto.randomUUID(),
-    lastName: "Ungültig",
-    firstName: "Ungültig",
-    schoolClass: "Ungültig",
-
-    primaryVoteChecked: false,
-    secondaryVoteChecked: false,
-
-    electionStats: {
-      points: 0,
-      numberOfFirstVotes: 0,
-    } as ElectionStats,
-
-    canDoubleVote: true
-  } as Candidate;
-
-  candidateStore.candidates.splice(0, 0, candidateUnknown);
-}
-
-callOnce(() => init());
+callOnce(() => candidateStore.init());
 
 </script>
 

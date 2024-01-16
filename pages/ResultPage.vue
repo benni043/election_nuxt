@@ -38,10 +38,12 @@ function download(blob: Blob, fileName: string) {
   document.body.removeChild(downloadLink);
 }
 
-
 function end() {
   candidateStore.candidates.splice(0, candidateStore.candidates.length);
   ballotPaperStore.ballotPapers.splice(0, ballotPaperStore.ballotPapers.length);
+
+  //todo init in votePage
+  candidateStore.init();
 
   return navigateTo("/");
 }
