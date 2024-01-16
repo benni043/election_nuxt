@@ -194,100 +194,103 @@ function exportData() {
 </script>
 
 <template>
-  <div id="outer">
-    <button @click="exportData">export</button>
+<!--  <div id="outer">-->
+<!--    <button @click="exportData">export</button>-->
 
-    <div id="candidateInput" v-if="displayState === DisplayState.VOTE_BEFORE">
-      <div id="input">
-        <h1>
-          Fügen Sie hier bitte die Wahlkandidaten hinzu!
-        </h1>
+<!--    <div id="candidateInput" v-if="displayState === DisplayState.VOTE_BEFORE">-->
+<!--      <div id="input">-->
+<!--        <h1>-->
+<!--          Fügen Sie hier bitte die Wahlkandidaten hinzu!-->
+<!--        </h1>-->
 
-        <CandidateInputDisplay
-            @candidate="
-        (candidate: Candidate) => {
-          candidates.push(candidate);
-        }">
-        </CandidateInputDisplay>
+<!--        <CandidateInputDisplay-->
+<!--            @candidate="-->
+<!--        (candidate: Candidate) => {-->
+<!--          candidates.push(candidate);-->
+<!--        }">-->
+<!--        </CandidateInputDisplay>-->
 
-        <button @click="voteStart">Wahl starten</button>
-      </div>
+<!--        <button @click="voteStart">Wahl starten</button>-->
+<!--      </div>-->
 
-      <div id="addedCandidates">
-        <div v-for="addedCandidate in candidates">
-          <AddedCandidateDisplay
-              :added-candidate="addedCandidate"
-              @delete="(candidate: Candidate) => {
-            candidates.splice(candidates.indexOf(candidate), 1);
-          }">
-          </AddedCandidateDisplay>
-        </div>
-      </div>
-    </div>
+<!--      <div id="addedCandidates">-->
+<!--        <div v-for="addedCandidate in candidates">-->
+<!--          <AddedCandidateDisplay-->
+<!--              :added-candidate="addedCandidate"-->
+<!--              @delete="(candidate: Candidate) => {-->
+<!--            candidates.splice(candidates.indexOf(candidate), 1);-->
+<!--          }">-->
+<!--          </AddedCandidateDisplay>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
-    <div id="candidateShow" v-if="displayState === DisplayState.VOTE">
-      <div id="candidates">
-        <div ref="refs" v-for="candidate in candidates">
-          <CandidateDisplay
-              :candidate="candidate"
-              :is-primary-vote-clicked="isPrimaryVoteClicked"
-              :is-secondary-vote-clicked="isSecondaryVoteClicked"
-              @primary-vote="
-            (candidate: Candidate) => {
-              set(VoteType.FIRST_VOTE, candidate);
-            }
-          "
-              @secondary-vote="
-            (candidate: Candidate) => {
-              set(VoteType.SECONDARY_VOTE, candidate);
-            }
-          "
-          ></CandidateDisplay>
-        </div>
-      </div>
+<!--    <div id="candidateShow" v-if="displayState === DisplayState.VOTE">-->
+<!--      <div id="candidates">-->
+<!--        <div ref="refs" v-for="candidate in candidates">-->
+<!--          <CandidateDisplay-->
+<!--              :candidate="candidate"-->
+<!--              :is-primary-vote-clicked="isPrimaryVoteClicked"-->
+<!--              :is-secondary-vote-clicked="isSecondaryVoteClicked"-->
+<!--              @primary-vote="-->
+<!--            (candidate: Candidate) => {-->
+<!--              set(VoteType.FIRST_VOTE, candidate);-->
+<!--            }-->
+<!--          "-->
+<!--              @secondary-vote="-->
+<!--            (candidate: Candidate) => {-->
+<!--              set(VoteType.SECONDARY_VOTE, candidate);-->
+<!--            }-->
+<!--          "-->
+<!--          ></CandidateDisplay>-->
+<!--        </div>-->
+<!--      </div>-->
 
-      <div id="buttons">
-        <button :disabled="!canSave" @click="save">Speichern</button>
-        <button :disabled="activeBallotPaper !== null" @click="voteEnd">Wahl beenden</button>
-      </div>
+<!--      <div id="buttons">-->
+<!--        <button :disabled="!canSave" @click="save">Speichern</button>-->
+<!--        <button :disabled="activeBallotPaper !== null" @click="voteEnd">Wahl beenden</button>-->
+<!--      </div>-->
 
-      <div id="ballotPapers">
-        <div ref="refs" v-for="ballotPaper in ballotPapers.slice().reverse()">
-          <BallotPaperDisplay
-              :ballot-paper="ballotPaper"
-              :disabled="activeBallotPaper !== null"
-              @primary-vote="
-            (candidate: Candidate) => {
-              set(VoteType.FIRST_VOTE, candidate);
-            }
-          "
-              @secondary-vote="
-            (candidate: Candidate) => {
-              set(VoteType.SECONDARY_VOTE, candidate);
-            }
-          "
-              @active-ballot-paper="
-            (ballotPaper: BallotPaper) => {
-              activeBallotPaper = ballotPaper;
-            }
-          "
-          ></BallotPaperDisplay>
-        </div>
-      </div>
-    </div>
+<!--      <div id="ballotPapers">-->
+<!--        <div ref="refs" v-for="ballotPaper in ballotPapers.slice().reverse()">-->
+<!--          <BallotPaperDisplay-->
+<!--              :ballot-paper="ballotPaper"-->
+<!--              :disabled="activeBallotPaper !== null"-->
+<!--              @primary-vote="-->
+<!--            (candidate: Candidate) => {-->
+<!--              set(VoteType.FIRST_VOTE, candidate);-->
+<!--            }-->
+<!--          "-->
+<!--              @secondary-vote="-->
+<!--            (candidate: Candidate) => {-->
+<!--              set(VoteType.SECONDARY_VOTE, candidate);-->
+<!--            }-->
+<!--          "-->
+<!--              @active-ballot-paper="-->
+<!--            (ballotPaper: BallotPaper) => {-->
+<!--              activeBallotPaper = ballotPaper;-->
+<!--            }-->
+<!--          "-->
+<!--          ></BallotPaperDisplay>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
-    <div id="endShow" v-if="displayState === DisplayState.VOTE_AFTER">
-      <div id="endCandidate">
-        <div v-for="endCandidate in candidates">
-          <EndCadidateDisplay :candidate="endCandidate">
-          </EndCadidateDisplay>
-        </div>
-      </div>
+<!--    <div id="endShow" v-if="displayState === DisplayState.VOTE_AFTER">-->
+<!--      <div id="endCandidate">-->
+<!--        <div v-for="endCandidate in candidates">-->
+<!--          <EndCadidateDisplay :candidate="endCandidate">-->
+<!--          </EndCadidateDisplay>-->
+<!--        </div>-->
+<!--      </div>-->
 
-      <button @click="showEnd">Beenden</button>
-    </div>
+<!--      <button @click="showEnd">Beenden</button>-->
+<!--    </div>-->
+<!--  </div>-->
 
-  </div>
+  <nuxt-layout>
+    <nuxt-page />
+  </nuxt-layout>
 </template>
 
 <style scoped>

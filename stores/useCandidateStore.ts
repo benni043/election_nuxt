@@ -1,8 +1,8 @@
 import {defineStore} from "pinia";
 import type {Candidate, ElectionStats} from "~/utils/types";
 
-export const candidatesStore = defineStore("candidates", {
-    state: () => [] as Candidate[],
+export const useCandidateStore = defineStore("candidates", {
+    state: () => ({candidates: [] as Candidate[]}),
     actions: {
         init() {
             let candidateUnknown = {
@@ -22,8 +22,11 @@ export const candidatesStore = defineStore("candidates", {
                 canDoubleVote: true
             } as Candidate;
 
-            this.splice(0, 0, candidateUnknown);
-        }
+            this.candidates.splice(0, 0, candidateUnknown);
+        },
 
+        addCandidate(candidate: Candidate) {
+            this.candidates.push(candidate);
+        }
     }
 })
