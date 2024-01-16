@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {type BallotPaper, type Candidate, VoteType} from "~/utils/types";
+import {type BallotPaper, type Candidate, type ElectionStats, VoteType} from "~/utils/types";
 import {useCandidateStore} from "~/stores/useCandidateStore";
 import {useBallotPaperStore} from "~/stores/useBallotPaperStore";
 
-let candidates = useCandidateStore();
-let ballotPapers = useBallotPaperStore();
+let candidateStore = useCandidateStore();
+let ballotPaperStore = useBallotPaperStore();
 
 let isPrimaryVoteClicked = ref(true);
 let isSecondaryVoteClicked = ref(true);
@@ -42,13 +42,13 @@ function save() {
     id: crypto.randomUUID(),
     ballotPaperNumber: activeBallotPaper
         ? activeBallotPaper.ballotPaperNumber
-        : ballotPapers.filter((obj) => obj.isActive).length + 1,
+        : ballotPaperStore.ballotPapers.filter((obj) => obj.isActive).length + 1,
     isActive: true,
     primaryVoteCandidate: primaryVoteCandidate,
     secondaryVoteCandidate: secondaryVoteCandidate,
   } as BallotPaper;
 
-  ballotPapers.push(newBallotPaper);
+  ballotPaperStore.addBallotPaper(newBallotPaper);
 
   if (activeBallotPaper) {
     activeBallotPaper.isActive = false;
@@ -68,22 +68,43 @@ function reset() {
 
   activeBallotPaper = null;
 
-  for (let candidate of candidates) {
+  for (let candidate of candidateStore.candidates) {
     candidate.primaryVoteChecked = false;
     candidate.secondaryVoteChecked = false;
   }
 }
 
-candidates.init();
+function init() {
+  let candidateUnknown = {
+    id: crypto.randomUUID(),
+    lastName: "Ungültig",
+    firstName: "",
+    schoolClass: "Ungültig",
+
+    primaryVoteChecked: false,
+    secondaryVoteChecked: false,
+
+    electionStats: {
+      points: 0,
+      numberOfFirstVotes: 0,
+    } as ElectionStats,
+
+    canDoubleVote: true
+  } as Candidate;
+
+  candidateStore.candidates.splice(0, 0, candidateUnknown);
+}
+
+init();
 
 </script>
 
 <template>
   <div id="outer">
     <div id="candidates">
-      <div ref="refs" v-for="candidate in candidates">
+      <div ref="refs" v-for="candidateInner in candidateStore.candidates" :key="candidateInner">
         <CandidateDisplay
-            :candidate="candidate"
+            :candidate="candidateInner"
             :is-primary-vote-clicked="isPrimaryVoteClicked"
             :is-secondary-vote-clicked="isSecondaryVoteClicked"
             @primary-vote="
@@ -106,7 +127,7 @@ candidates.init();
     </div>
 
     <div id="ballotPapers">
-      <div ref="refs" v-for="ballotPaper in ballotPapers.slice().reverse()">
+      <div ref="refs" v-for="ballotPaper in ballotPaperStore.ballotPapers.slice().reverse()">
         <BallotPaperDisplay
             :ballot-paper="ballotPaper"
             :disabled="activeBallotPaper !== null"

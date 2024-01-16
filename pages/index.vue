@@ -20,7 +20,7 @@ let candidatesStore = useCandidateStore();
         }">
     </CandidateInputDisplay>
 
-    <nuxt-link href="VotePage">Wahl starten</nuxt-link>
+    <nuxt-link class="button" href="VotePage">Wahl starten</nuxt-link>
   </div>
 
   <div id="addedCandidates">
@@ -49,8 +49,33 @@ let candidatesStore = useCandidateStore();
   height: 100vh;
   width: 100vw;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   align-items: center;
 }
 
+.button {
+  text-align: center;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin: 20px;
+  width: 150px;
+  background-color: #fff;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
+
+.button:hover {
+  background-color: #ddd;
+}
+
+.button:disabled {
+  background-color: #cccccc;
+  color: #888888;
+  cursor: default;
+}
 </style>

@@ -1,6 +1,11 @@
 import {defineStore} from "pinia";
-import type {BallotPaper} from "~/utils/types";
+import type {BallotPaper, Candidate} from "~/utils/types";
 
 export const useBallotPaperStore = defineStore("ballotPapers", {
-    state: () => [] as BallotPaper[],
+    state: () =>  ({ballotPapers: [] as BallotPaper[]}),
+    actions: {
+        addBallotPaper(ballotPaper: BallotPaper) {
+            this.ballotPapers.push(ballotPaper);
+        }
+    }
 })

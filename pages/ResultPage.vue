@@ -3,19 +3,19 @@
 import {useCandidateStore} from "~/stores/useCandidateStore";
 import {useBallotPaperStore} from "~/stores/useBallotPaperStore";
 
-let candidates = useCandidateStore();
-let ballotPapers = useBallotPaperStore();
+let candidateStore = useCandidateStore();
+let ballotPaperStore = useBallotPaperStore();
 
 function getStats() {
-  let validVoteCount = ballotPapers.filter((obj) => (!obj.primaryVoteCandidate?.canDoubleVote || !obj.secondaryVoteCandidate?.canDoubleVote)).length;
-  let invalidVoteCount = ballotPapers.filter((obj) => (obj.primaryVoteCandidate?.canDoubleVote && obj.secondaryVoteCandidate?.canDoubleVote)).length;
+  let validVoteCount = ballotPaperStore.ballotPapers.filter((obj) => (!obj.primaryVoteCandidate?.canDoubleVote || !obj.secondaryVoteCandidate?.canDoubleVote)).length;
+  let invalidVoteCount = ballotPaperStore.ballotPapers.filter((obj) => (obj.primaryVoteCandidate?.canDoubleVote && obj.secondaryVoteCandidate?.canDoubleVote)).length;
 
   console.log("Gültige Stimmen: " + validVoteCount);
   console.log("Ungültige Stimmen: " + invalidVoteCount);
 }
 
 function exportData() {
-  const jsonString = JSON.stringify(candidates, null, 2);
+  const jsonString = JSON.stringify(candidateStore, null, 2);
 
   const blob = new Blob([jsonString], {type: "application/json"});
 
@@ -35,13 +35,13 @@ getStats();
 <template>
   <div id="outer">
     <div id="endCandidate">
-      <div v-for="endCandidate in candidates">
+      <div v-for="endCandidate in candidateStore">
         <EndCadidateDisplay :candidate="endCandidate">
         </EndCadidateDisplay>
       </div>
     </div>
 
-    <nuxt-link href="startPage">Beenden</nuxt-link>
+    <nuxt-link href="/">Beenden</nuxt-link>
   </div>
 </template>
 
