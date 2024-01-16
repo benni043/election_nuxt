@@ -32,14 +32,17 @@ function change(voteType: VoteType) {
       </div>
     </div>
 
+    <!--            :disabled="-->
+    <!--              ((!props.isPrimaryVoteClicked &&-->
+    <!--                !props.candidate.primaryVoteChecked) ||-->
+    <!--              props.candidate.secondaryVoteChecked)-->
+    <!--          "-->
+
     <div id="field">
       <div>
         <input
-            :disabled="
-              ((!props.isPrimaryVoteClicked &&
-                !props.candidate.primaryVoteChecked) ||
-              props.candidate.secondaryVoteChecked)
-          "
+            :disabled="(!props.isPrimaryVoteClicked && !props.candidate.primaryVoteChecked) || (props.candidate.secondaryVoteChecked && !props.candidate.canDoubleVote)"
+
             v-model="props.candidate.primaryVoteChecked"
             type="checkbox"
             name="firstVote"
@@ -49,9 +52,7 @@ function change(voteType: VoteType) {
         <label
             :class="{
             disabled:
-              ((!props.isPrimaryVoteClicked &&
-                !props.candidate.primaryVoteChecked) ||
-              props.candidate.secondaryVoteChecked) && !props.candidate.canDoubleVote,
+              (!props.isPrimaryVoteClicked && !props.candidate.primaryVoteChecked) || (props.candidate.secondaryVoteChecked && !props.candidate.canDoubleVote)
           }"
             for="firstVote"
         >Erststimme</label>
@@ -59,11 +60,8 @@ function change(voteType: VoteType) {
 
       <div>
         <input
-            :disabled="
-            ((!props.isSecondaryVoteClicked &&
-              !props.candidate.secondaryVoteChecked) ||
-            props.candidate.primaryVoteChecked) && !props.candidate.canDoubleVote
-          "
+            :disabled="(!props.isSecondaryVoteClicked && !props.candidate.secondaryVoteChecked) || (props.candidate.primaryVoteChecked && !props.candidate.canDoubleVote)"
+
             v-model="props.candidate.secondaryVoteChecked"
             type="checkbox"
             name="secondaryVote"
@@ -73,9 +71,7 @@ function change(voteType: VoteType) {
         <label
             :class="{
             disabled:
-              ((!props.isSecondaryVoteClicked &&
-              !props.candidate.secondaryVoteChecked) ||
-            props.candidate.primaryVoteChecked) && !props.candidate.canDoubleVote
+              (!props.isSecondaryVoteClicked && !props.candidate.secondaryVoteChecked) || (props.candidate.primaryVoteChecked && !props.candidate.canDoubleVote)
           }"
             for="secondaryVote"
         >Zweitstimme</label
