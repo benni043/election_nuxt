@@ -84,7 +84,10 @@ function result() {
   return navigateTo("/ResultPage");
 }
 
-if (process.client) candidateStore.init();
+if (process.client) {
+
+  candidateStore.init();
+}
 
 </script>
 

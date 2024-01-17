@@ -16,6 +16,7 @@ function getStats() {
               !(obj.primaryVoteCandidate?.lastName === 'Ungültig') ||
               !(obj.secondaryVoteCandidate?.lastName === 'Ungültig')
       ).length;
+
   invalidVoteCount = ballotPaperStore.ballotPapers
       .filter((obj) => obj.isActive)
       .filter(
@@ -62,9 +63,6 @@ function download(blob: Blob, fileName: string) {
 }
 
 function end() {
-  candidateStore.candidates.splice(0, candidateStore.candidates.length);
-  ballotPaperStore.ballotPapers.splice(0, ballotPaperStore.ballotPapers.length);
-
   candidateStore.reset();
   ballotPaperStore.reset();
 
