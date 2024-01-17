@@ -28,14 +28,22 @@ function restore() {
     // Reading candidateFile
     readerCandidate.onload = () => {
       if (typeof readerCandidate.result === "string") {
-        candidatesStore.candidates = JSON.parse(readerCandidate.result);
+        let candidates = JSON.parse(readerCandidate.result);
+
+        for (let candidate of candidates) {
+          candidatesStore.candidates.push(candidate)
+        }
       }
     };
 
     // Reading ballotPaperFile
     readerBallotPaper.onload = () => {
       if (typeof readerBallotPaper.result === "string") {
-        ballotPaperStore.ballotPapers = JSON.parse(readerBallotPaper.result);
+        let ballotPapers = JSON.parse(readerBallotPaper.result);
+
+        for (let ballotPaper of ballotPapers) {
+          ballotPaperStore.ballotPapers.push(ballotPaper);
+        }
       }
     };
 

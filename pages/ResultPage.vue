@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useCandidateStore } from "~/stores/useCandidateStore";
-import { useBallotPaperStore } from "~/stores/useBallotPaperStore";
+import {useCandidateStore} from "~/stores/useCandidateStore";
+import {useBallotPaperStore} from "~/stores/useBallotPaperStore";
 
 let candidateStore = useCandidateStore();
 let ballotPaperStore = useBallotPaperStore();
@@ -9,27 +9,27 @@ let validVoteCount: number = 0;
 let invalidVoteCount: number = 0;
 
 function getStats() {
-  validVoteCount = ballotPaperStore.ballotPapers
-    .filter((obj) => obj.isActive)
-    .filter(
-      (obj) =>
-        !obj.primaryVoteCandidate?.canDoubleVote ||
-        !obj.secondaryVoteCandidate?.canDoubleVote,
-    ).length;
-  invalidVoteCount = ballotPaperStore.ballotPapers
-    .filter((obj) => obj.isActive)
-    .filter(
-      (obj) =>
-        obj.primaryVoteCandidate?.canDoubleVote &&
-        obj.secondaryVoteCandidate?.canDoubleVote,
-    ).length;
+  // validVoteCount = ballotPaperStore.ballotPapers
+  //   .filter((obj) => obj.isActive)
+  //   .filter(
+  //     (obj) =>
+  //       !obj.primaryVoteCandidate?.canDoubleVote ||
+  //       !obj.secondaryVoteCandidate?.canDoubleVote,
+  //   ).length;
+  // invalidVoteCount = ballotPaperStore.ballotPapers
+  //   .filter((obj) => obj.isActive)
+  //   .filter(
+  //     (obj) =>
+  //       obj.primaryVoteCandidate?.canDoubleVote &&
+  //       obj.secondaryVoteCandidate?.canDoubleVote,
+  //   ).length;
 }
 
 function exportCandidates() {
   const jsonStringCandidate = JSON.stringify(
-    candidateStore.candidates,
-    null,
-    2,
+      candidateStore.candidates,
+      null,
+      2,
   );
   const blobCandidate = new Blob([jsonStringCandidate], {
     type: "application/json",
@@ -40,9 +40,9 @@ function exportCandidates() {
 
 function exportBallotPapers() {
   const jsonStringBallotPaper = JSON.stringify(
-    ballotPaperStore.ballotPapers,
-    null,
-    2,
+      ballotPaperStore.ballotPapers,
+      null,
+      2,
   );
   const blobBallotPaper = new Blob([jsonStringBallotPaper], {
     type: "application/json",
@@ -65,8 +65,8 @@ function end() {
   candidateStore.candidates.splice(0, candidateStore.candidates.length);
   ballotPaperStore.ballotPapers.splice(0, ballotPaperStore.ballotPapers.length);
 
-  //todo init in votePage
-  candidateStore.init();
+  candidateStore.reset();
+  ballotPaperStore.reset();
 
   return navigateTo("/");
 }
@@ -89,8 +89,8 @@ getStats();
 
     <div id="endCandidate">
       <div
-        v-for="endCandidate in candidateStore.candidates"
-        :key="endCandidate"
+          v-for="endCandidate in candidateStore.candidates"
+          :key="endCandidate"
       >
         <EndCadidateDisplay :candidate="endCandidate"></EndCadidateDisplay>
       </div>

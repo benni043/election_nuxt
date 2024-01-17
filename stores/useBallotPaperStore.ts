@@ -6,6 +6,9 @@ export const useBallotPaperStore = defineStore("ballotPapers", {
     actions: {
         addBallotPaper(ballotPaper: BallotPaper) {
             this.ballotPapers.push(ballotPaper);
+        },
+        reset() {
+            this.ballotPapers.splice(0, this.ballotPapers.length);
         }
     }
 })

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { BallotPaper, Candidate } from "~/utils/types";
+import type {BallotPaper, Candidate} from "~/utils/types";
+import {useCandidateStore} from "~/stores/useCandidateStore";
 
 let props = defineProps<{
   ballotPaper: BallotPaper;
@@ -12,38 +13,48 @@ let emit = defineEmits<{
   activeBallotPaper: [ballotPaper: BallotPaper];
 }>();
 
-function change() {
-  if (props.ballotPaper.primaryVoteCandidate) {
-    props.ballotPaper.primaryVoteCandidate.primaryVoteChecked = true;
-    props.ballotPaper.primaryVoteCandidate.electionStats.points -= 2;
-    props.ballotPaper.primaryVoteCandidate.electionStats.numberOfFirstVotes -= 1;
+let candidateStore = useCandidateStore();
 
-    emit("primaryVote", props.ballotPaper.primaryVoteCandidate);
+function change() {
+  let primaryCandidate = candidateStore.getByID(props.ballotPaper.primaryVoteCandidate!.id);
+
+  if (primaryCandidate) {
+    primaryCandidate.primaryVoteChecked = true;
+    primaryCandidate.electionStats.points -= 2;
+    primaryCandidate.electionStats.numberOfFirstVotes -= 1;
+
+    emit("primaryVote", primaryCandidate);
   }
 
-  if (props.ballotPaper.secondaryVoteCandidate) {
-    props.ballotPaper.secondaryVoteCandidate.secondaryVoteChecked = true;
-    props.ballotPaper.secondaryVoteCandidate.electionStats.points -= 1;
+  let secondaryCandidate = candidateStore.getByID(props.ballotPaper.secondaryVoteCandidate!.id);
 
-    emit("secondaryVote", props.ballotPaper.secondaryVoteCandidate);
+  if (secondaryCandidate) {
+    secondaryCandidate.secondaryVoteChecked = true;
+    secondaryCandidate.electionStats.points -= 1;
+
+    emit("secondaryVote", secondaryCandidate);
   }
 
   if (
-    props.ballotPaper.primaryVoteCandidate ||
-    props.ballotPaper.secondaryVoteCandidate
+      primaryCandidate ||
+      secondaryCandidate
   ) {
     emit("activeBallotPaper", props.ballotPaper);
   }
 }
 
 function remove() {
-  if (props.ballotPaper.primaryVoteCandidate) {
-    props.ballotPaper.primaryVoteCandidate.electionStats.points -= 2;
-    props.ballotPaper.primaryVoteCandidate.electionStats.numberOfFirstVotes -= 1;
+  let primaryCandidate = candidateStore.getByID(props.ballotPaper.primaryVoteCandidate!.id);
+
+  if (primaryCandidate) {
+    primaryCandidate.electionStats.points -= 2;
+    primaryCandidate.electionStats.numberOfFirstVotes -= 1;
   }
 
-  if (props.ballotPaper.secondaryVoteCandidate) {
-    props.ballotPaper.secondaryVoteCandidate.electionStats.points -= 1;
+  let secondaryCandidate = candidateStore.getByID(props.ballotPaper.secondaryVoteCandidate!.id);
+
+  if (secondaryCandidate) {
+    secondaryCandidate.electionStats.points -= 1;
   }
 
   props.ballotPaper.isActive = false;
@@ -64,7 +75,7 @@ function remove() {
         </div>
       </div>
 
-      <br />
+      <br/>
 
       <div v-if="props.ballotPaper.secondaryVoteCandidate">
         <div class="innerHead">Zweitstimme:</div>
@@ -78,14 +89,14 @@ function remove() {
 
     <div id="buttonCenter">
       <button
-        @click="change"
-        :disabled="!props.ballotPaper.isActive || props.disabled"
+          @click="change"
+          :disabled="!props.ballotPaper.isActive || props.disabled"
       >
         Ändern
       </button>
       <button
-        @click="remove"
-        :disabled="!props.ballotPaper.isActive || props.disabled"
+          @click="remove"
+          :disabled="!props.ballotPaper.isActive || props.disabled"
       >
         Löschen
       </button>
@@ -142,9 +153,8 @@ button {
   color: black;
   font-weight: bold;
   cursor: pointer;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
+  transition: background-color 0.3s,
+  color 0.3s;
 }
 
 button:hover {

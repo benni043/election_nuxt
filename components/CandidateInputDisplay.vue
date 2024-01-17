@@ -77,7 +77,7 @@ function generateClasses() {
       </div>
       <div class="form-group">
         <label for="schoolClass">Klasse:</label>
-        <select>
+        <select v-model="schoolClass">
           <option id="schoolClass" v-for="classItem in generateClasses()" :key="classItem">{{ classItem }}</option>
         </select>
       </div>
