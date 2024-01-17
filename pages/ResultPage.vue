@@ -9,20 +9,20 @@ let validVoteCount: number = 0;
 let invalidVoteCount: number = 0;
 
 function getStats() {
-  // validVoteCount = ballotPaperStore.ballotPapers
-  //   .filter((obj) => obj.isActive)
-  //   .filter(
-  //     (obj) =>
-  //       !obj.primaryVoteCandidate?.canDoubleVote ||
-  //       !obj.secondaryVoteCandidate?.canDoubleVote,
-  //   ).length;
-  // invalidVoteCount = ballotPaperStore.ballotPapers
-  //   .filter((obj) => obj.isActive)
-  //   .filter(
-  //     (obj) =>
-  //       obj.primaryVoteCandidate?.canDoubleVote &&
-  //       obj.secondaryVoteCandidate?.canDoubleVote,
-  //   ).length;
+  validVoteCount = ballotPaperStore.ballotPapers
+      .filter((obj) => obj.isActive)
+      .filter(
+          (obj) =>
+              !(obj.primaryVoteCandidate?.lastName === 'Ungültig') ||
+              !(obj.secondaryVoteCandidate?.lastName === 'Ungültig')
+      ).length;
+  invalidVoteCount = ballotPaperStore.ballotPapers
+      .filter((obj) => obj.isActive)
+      .filter(
+          (obj) =>
+              (obj.primaryVoteCandidate?.lastName === 'Ungültig') ||
+              (obj.secondaryVoteCandidate?.lastName === 'Ungültig')
+      ).length;
 }
 
 function exportCandidates() {
@@ -89,10 +89,10 @@ getStats();
 
     <div id="endCandidate">
       <div
-          v-for="endCandidate in candidateStore.candidates"
+          v-for="(endCandidate, index) in candidateStore.candidates"
           :key="endCandidate"
       >
-        <EndCadidateDisplay :candidate="endCandidate"></EndCadidateDisplay>
+        <EndCadidateDisplay v-if="index != 0" :candidate="endCandidate"></EndCadidateDisplay>
       </div>
     </div>
   </div>
