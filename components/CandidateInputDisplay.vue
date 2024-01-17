@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Candidate, ElectionStats } from "~/utils/types";
+import type {Candidate, ElectionStats} from "~/utils/types";
 
 let firstName = ref("");
 let lastName = ref("");
@@ -33,9 +33,9 @@ function submitForm() {
 }
 
 function isValid(
-  firstName: string,
-  lastName: string,
-  schoolClass: string,
+    firstName: string,
+    lastName: string,
+    schoolClass: string,
 ): boolean {
   return !(!firstName || !lastName || !schoolClass);
 }
@@ -45,6 +45,23 @@ function reset() {
   lastName.value = "";
   schoolClass.value = "";
 }
+
+function generateClasses() {
+  const grades = ['1', '2', '3', '4', '5'];
+  const letters = ['A', 'B', 'C'];
+  const hif = 'HIF';
+
+  let schoolClasses: string[] = [];
+
+  grades.forEach(grade => {
+    letters.forEach(letter => {
+      const className = grade + letter + hif;
+      schoolClasses.push(className);
+    });
+  });
+
+  return schoolClasses;
+}
 </script>
 
 <template>
@@ -52,15 +69,17 @@ function reset() {
     <form @submit.prevent="submitForm" class="form">
       <div class="form-group">
         <label for="firstName">Vorname:</label>
-        <input type="text" id="firstName" v-model="firstName" />
+        <input type="text" id="firstName" v-model="firstName"/>
       </div>
       <div class="form-group">
         <label for="lastName">Nachname:</label>
-        <input type="text" id="lastName" v-model="lastName" />
+        <input type="text" id="lastName" v-model="lastName"/>
       </div>
       <div class="form-group">
         <label for="schoolClass">Klasse:</label>
-        <input type="text" id="schoolClass" v-model="schoolClass" />
+        <select>
+          <option id="schoolClass" v-for="classItem in generateClasses()" :key="classItem">{{ classItem }}</option>
+        </select>
       </div>
       <button type="submit">Bestätigen</button>
     </form>
@@ -68,6 +87,7 @@ function reset() {
 </template>
 
 <style scoped>
+
 .container {
   display: flex;
   justify-content: center;
@@ -98,15 +118,19 @@ label {
 }
 
 input[type="text"],
-button {
+button, select {
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
 
-input[type="text"] {
+input[type="text"], select {
   width: 300px;
   box-sizing: border-box;
+}
+
+select {
+  background: none;
 }
 
 button {
@@ -115,9 +139,8 @@ button {
   width: 300px;
   font-weight: bold;
   cursor: pointer;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
+  transition: background-color 0.3s,
+  color 0.3s;
 }
 
 button:hover {
