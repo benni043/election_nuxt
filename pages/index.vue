@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import {useCandidateStore} from "~/stores/useCandidateStore";
+import { useCandidateStore } from "~/stores/useCandidateStore";
+import { useLocalStorage } from "#imports";
 
-let candidatesStore = useCandidateStore();
+let candidateStore = useCandidateStore();
 let ballotPaperStore = useBallotPaperStore();
 
 let candidateFile = ref<File | null>(null);
@@ -23,46 +24,49 @@ function loadDataFromFiles() {
     // Reading candidateFile
     readerCandidate.onload = () => {
       if (typeof readerCandidate.result === "string") {
-        let candidates = JSON.parse(readerCandidate.result);
-
-        for (let candidate of candidates) {
-          candidatesStore.candidates.push(candidate)
-        }
+        candidateStore.candidates = JSON.parse(readerCandidate.result);
+        useLocalStorage().updateCandidates();
       }
     };
 
     // Reading ballotPaperFile
     readerBallotPaper.onload = () => {
       if (typeof readerBallotPaper.result === "string") {
-        let ballotPapers = JSON.parse(readerBallotPaper.result);
-
-        for (let ballotPaper of ballotPapers) {
-          ballotPaperStore.ballotPapers.push(ballotPaper);
-        }
+        ballotPaperStore.ballotPapers = JSON.parse(readerBallotPaper.result);
+        useLocalStorage().updateBallots();
       }
     };
 
     readerCandidate.readAsText(candidateFile.value);
     readerBallotPaper.readAsText(ballotPaperFile.value);
   } else {
-    console.error('No file selected');
+    console.error("No file selected");
   }
 
   redirectToVotePage();
 }
 
 function restore() {
-  redirectToVotePage();
+  const storedCandidates = localStorage.getItem("candidates");
+  const storedBallots = localStorage.getItem("ballots");
+
+  if (storedCandidates && storedBallots) {
+    candidateStore.candidates = JSON.parse(storedCandidates);
+    ballotPaperStore.ballotPapers = JSON.parse(storedBallots);
+
+    redirectToVotePage();
+  } else {
+    console.log("empty");
+  }
 }
 
 function addCandidates() {
-  return navigateTo("/CandidateInput")
+  return navigateTo("/CandidateInputPage");
 }
 
 function redirectToVotePage() {
-  return navigateTo("/VotePage")
+  return navigateTo("/VotePage");
 }
-
 </script>
 
 <template>
@@ -75,6 +79,8 @@ function redirectToVotePage() {
 
       <div id="restore">
         <label class="head">Daten aus letzter Sitzung wiederherstellen: </label>
+
+<!--        todo disable or warning if empty-->
         <button @click="restore">Wiederherstellen</button>
       </div>
 
@@ -83,12 +89,23 @@ function redirectToVotePage() {
           <label class="head">Daten aus lokalen Dateien laden: </label>
 
           <label class="buttonHead" for="candidates">Kandidaten-JSON</label>
-          <input id="candidates" type="file" @change="handleCandidateFileChange($event)"/>
+          <input
+            id="candidates"
+            type="file"
+            @change="handleCandidateFileChange($event)"
+          />
 
           <label class="buttonHead" for="ballotPapers">Wahlzettel-JSON</label>
-          <input id="ballotPapers" type="file" @change="handleBallotPaperFileChange($event)"/>
+          <input
+            id="ballotPapers"
+            type="file"
+            @change="handleBallotPaperFileChange($event)"
+          />
         </div>
-          <button :disabled="(candidateFile === null) || (ballotPaperFile === null)" @click="loadDataFromFiles">
+        <button
+          :disabled="candidateFile === null || ballotPaperFile === null"
+          @click="loadDataFromFiles"
+        >
           Laden
         </button>
       </div>
@@ -97,7 +114,6 @@ function redirectToVotePage() {
 </template>
 
 <style scoped lang="scss">
-
 #outer2 {
   display: flex;
   flex-direction: column;
@@ -139,5 +155,4 @@ function redirectToVotePage() {
   margin-top: 15px;
   margin-bottom: 5px;
 }
-
 </style>

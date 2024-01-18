@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {useCandidateStore} from "~/stores/useCandidateStore";
-import {useBallotPaperStore} from "~/stores/useBallotPaperStore";
+import { useCandidateStore } from "~/stores/useCandidateStore";
+import { useBallotPaperStore } from "~/stores/useBallotPaperStore";
+import type { Candidate } from "~/utils/types";
 
 let candidateStore = useCandidateStore();
 let ballotPaperStore = useBallotPaperStore();
@@ -10,33 +11,39 @@ let invalidVoteCount: number = 0;
 
 function getStats() {
   validVoteCount = ballotPaperStore.ballotPapers
-      .filter((obj) => obj.isActive)
-      .filter(
-          (obj) =>
-              (obj.primaryVoteCandidate?.lastName !== 'Ungültig') ||
-              (obj.secondaryVoteCandidate?.lastName !== 'Ungültig')
-      ).length;
+    .filter((obj) => obj.isActive)
+    .filter(
+      (obj) =>
+        obj.primaryVoteCandidate?.lastName !== "Ungültig" ||
+        obj.secondaryVoteCandidate?.lastName !== "Ungültig",
+    ).length;
 
   invalidVoteCount = ballotPaperStore.ballotPapers
-      .filter((obj) => obj.isActive)
-      .filter(
-          (obj) =>
-              (obj.primaryVoteCandidate?.lastName === 'Ungültig') &&
-              (obj.secondaryVoteCandidate?.lastName === 'Ungültig')
-      ).length;
+    .filter((obj) => obj.isActive)
+    .filter(
+      (obj) =>
+        obj.primaryVoteCandidate?.lastName === "Ungültig" &&
+        obj.secondaryVoteCandidate?.lastName === "Ungültig",
+    ).length;
+}
 
-  candidateStore.candidates.sort((a, b) =>
-      b.electionStats.points - a.electionStats.points == 0
-          ? b.electionStats.numberOfFirstVotes - a.electionStats.numberOfFirstVotes
-          : b.electionStats.points - a.electionStats.points
+function getSortedCandidates(): Candidate[] {
+  const candidates = [...candidateStore.candidates];
+
+  candidates.sort((a, b) =>
+    b.electionStats.points - a.electionStats.points == 0
+      ? b.electionStats.numberOfFirstVotes - a.electionStats.numberOfFirstVotes
+      : b.electionStats.points - a.electionStats.points,
   );
+
+  return candidates;
 }
 
 function exportCandidates() {
   const jsonStringCandidate = JSON.stringify(
-      candidateStore.candidates,
-      null,
-      2,
+    candidateStore.candidates,
+    null,
+    2,
   );
   const blobCandidate = new Blob([jsonStringCandidate], {
     type: "application/json",
@@ -47,9 +54,9 @@ function exportCandidates() {
 
 function exportBallotPapers() {
   const jsonStringBallotPaper = JSON.stringify(
-      ballotPaperStore.ballotPapers,
-      null,
-      2,
+    ballotPaperStore.ballotPapers,
+    null,
+    2,
   );
   const blobBallotPaper = new Blob([jsonStringBallotPaper], {
     type: "application/json",
@@ -72,6 +79,9 @@ function end() {
   candidateStore.reset();
   ballotPaperStore.reset();
 
+  localStorage.removeItem("candidates");
+  localStorage.removeItem("ballots");
+
   return navigateTo("/");
 }
 
@@ -93,10 +103,13 @@ getStats();
 
     <div id="endCandidate">
       <div
-          v-for="endCandidate in candidateStore.candidates"
-          :key="endCandidate"
+        v-for="endCandidate in getSortedCandidates()"
+        :key="endCandidate"
       >
-        <EndCadidateDisplay v-if="endCandidate.lastName !== 'Ungültig'" :candidate="endCandidate"></EndCadidateDisplay>
+        <EndCadidateDisplay
+          v-if="endCandidate.lastName !== 'Ungültig'"
+          :candidate="endCandidate"
+        ></EndCadidateDisplay>
       </div>
     </div>
   </div>
