@@ -176,28 +176,4 @@ if (process.client) {
     flex-direction: column;
   }
 }
-
-button {
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  margin: 20px;
-  width: 150px;
-  background-color: #fff;
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  text-decoration: none;
-}
-
-button:hover {
-  background-color: #ddd;
-}
-
-button:disabled {
-  background-color: #cccccc;
-  color: #888888;
-  cursor: default;
-}
 </style>

@@ -66,37 +66,63 @@ function redirectToVotePage() {
 </script>
 
 <template>
-  <div id="outer">
-    <div id="loadLocalFiles">
+  <div id="outer2">
+    <div id="outer">
       <div id="addCandidates">
-        <button @click="addCandidates">Kandidaten eingeben</button>
+        <label class="head">Daten selbst hinzufügen: </label>
+        <button @click="addCandidates">Hinzufügen</button>
       </div>
 
       <div id="restore">
-        <button @click="restore">letzte Sitzung wiederherstellen</button>
+        <label class="head">Daten aus letzter Sitzung wiederherstellen: </label>
+        <button @click="restore">Wiederherstellen</button>
       </div>
 
-      <button :disabled="(candidateFile === null) || (ballotPaperFile === null)" @click="loadDataFromFiles">lade
-        Daten aus Datei
-      </button>
+      <div>
+        <div id="loadLocalFiles">
+          <label class="head">Daten aus lokalen Dateien laden: </label>
 
-      <label for="candidates">Kandidaten-JSON</label>
-      <input id="candidates" type="file" @change="handleCandidateFileChange($event)"/>
+          <label class="buttonHead" for="candidates">Kandidaten-JSON</label>
+          <input id="candidates" type="file" @change="handleCandidateFileChange($event)"/>
 
-      <label for="ballotPapers">Wahlzettel-JSON</label>
-      <input id="ballotPapers" type="file" @change="handleBallotPaperFileChange($event)"/>
+          <label class="buttonHead" for="ballotPapers">Wahlzettel-JSON</label>
+          <input id="ballotPapers" type="file" @change="handleBallotPaperFileChange($event)"/>
+        </div>
+          <button :disabled="(candidateFile === null) || (ballotPaperFile === null)" @click="loadDataFromFiles">
+          Laden
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 
-#outer {
-  height: 100vh;
+#outer2 {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+#outer {
+  height: 100vh;
+  width: 55vw;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  > div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    margin: 10px;
+  }
 }
 
 #loadLocalFiles {
@@ -104,27 +130,14 @@ function redirectToVotePage() {
   flex-direction: column;
 }
 
-button {
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  margin: 20px;
-  width: 150px;
-  background-color: #fff;
-  color: black;
+.head {
+  font-size: 16px;
   font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  text-decoration: none;
 }
 
-button:hover {
-  background-color: #ddd;
+.buttonHead {
+  margin-top: 15px;
+  margin-bottom: 5px;
 }
 
-button:disabled {
-  background-color: #cccccc;
-  color: #888888;
-  cursor: default;
-}
 </style>

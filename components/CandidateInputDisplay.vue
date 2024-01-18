@@ -71,16 +71,19 @@ function generateClasses() {
         <label for="firstName">Vorname:</label>
         <input type="text" id="firstName" v-model="firstName"/>
       </div>
+
       <div class="form-group">
         <label for="lastName">Nachname:</label>
         <input type="text" id="lastName" v-model="lastName"/>
       </div>
+
       <div class="form-group">
         <label for="schoolClass">Klasse:</label>
         <select v-model="schoolClass">
           <option id="schoolClass" v-for="classItem in generateClasses()" :key="classItem">{{ classItem }}</option>
         </select>
       </div>
+
       <button type="submit">Bestätigen</button>
     </form>
   </div>
@@ -118,13 +121,15 @@ label {
 }
 
 input[type="text"],
-button, select {
+select {
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
 
-input[type="text"], select {
+input[type="text"],
+select,
+button {
   width: 300px;
   box-sizing: border-box;
 }
@@ -134,16 +139,7 @@ select {
 }
 
 button {
-  background-color: #fff;
-  color: black;
-  width: 300px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s,
-  color 0.3s;
+  margin: 0;
 }
 
-button:hover {
-  background-color: #ddd;
-}
 </style>
