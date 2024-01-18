@@ -31,7 +31,7 @@ function redirectToMainMenu() {
       >
       </CandidateInputDisplay>
 
-      <button @click="redirectToVotePage">Wahl starten</button>
+      <button :disabled="candidatesStore.candidates.length < 1" @click="redirectToVotePage">Wahl starten</button>
       <button @click="redirectToMainMenu">Zurück zum Hauptmenu</button>
     </div>
 
