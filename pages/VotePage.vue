@@ -43,6 +43,7 @@ function save() {
     id: crypto.randomUUID(),
     ballotPaperNumber: activeBallotPaper
       ? activeBallotPaper.ballotPaperNumber
+        //todo fix for working nums
       : ballotPaperStore.ballotPapers.filter((obj) => obj.isActive).length + 1,
     isActive: true,
     primaryVoteCandidate: primaryVoteCandidate,
