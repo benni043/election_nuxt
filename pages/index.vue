@@ -1,27 +1,22 @@
 <script setup lang="ts">
-import {type Candidate} from "~/utils/types";
 import {useCandidateStore} from "~/stores/useCandidateStore";
 
 let candidatesStore = useCandidateStore();
 let ballotPaperStore = useBallotPaperStore();
 
-function start() {
-  return navigateTo("/VotePage");
-}
-
-let candidateFile: File;
-let ballotPaperFile: File;
+let candidateFile = ref<File | null>(null);
+let ballotPaperFile = ref<File | null>(null);
 
 function handleCandidateFileChange(event: any) {
-  candidateFile = event.target.files[0];
+  candidateFile.value = event.target.files[0];
 }
 
 function handleBallotPaperFileChange(event: any) {
-  ballotPaperFile = event.target.files[0];
+  ballotPaperFile.value = event.target.files[0];
 }
 
-function restore() {
-  if (candidateFile && ballotPaperFile) {
+function loadDataFromFiles() {
+  if (candidateFile.value && ballotPaperFile.value) {
     const readerCandidate = new FileReader();
     const readerBallotPaper = new FileReader();
 
@@ -47,30 +42,43 @@ function restore() {
       }
     };
 
-    readerCandidate.readAsText(candidateFile);
-    readerBallotPaper.readAsText(ballotPaperFile);
+    readerCandidate.readAsText(candidateFile.value);
+    readerBallotPaper.readAsText(ballotPaperFile.value);
   } else {
     console.error('No file selected');
   }
+
+  redirectToVotePage();
 }
+
+function restore() {
+  redirectToVotePage();
+}
+
+function addCandidates() {
+  return navigateTo("/CandidateInput")
+}
+
+function redirectToVotePage() {
+  return navigateTo("/VotePage")
+}
+
 </script>
 
 <template>
-  <div id="candidateInput">
-    <div id="input">
-      <h1>Fügen Sie hier bitte die Wahlkandidaten hinzu!</h1>
+  <div id="outer">
+    <div id="loadLocalFiles">
+      <div id="addCandidates">
+        <button @click="addCandidates">Kandidaten eingeben</button>
+      </div>
 
-      <CandidateInputDisplay
-          @candidate="
-          (candidate: Candidate) => {
-            candidatesStore.addCandidate(candidate);
-          }
-        "
-      >
-      </CandidateInputDisplay>
+      <div id="restore">
+        <button @click="restore">letzte Sitzung wiederherstellen</button>
+      </div>
 
-      <button @click="start">Wahl starten</button>
-      <button @click="restore">restore former election</button>
+      <button :disabled="(candidateFile === null) || (ballotPaperFile === null)" @click="loadDataFromFiles">lade
+        Daten aus Datei
+      </button>
 
       <label for="candidates">Kandidaten-JSON</label>
       <input id="candidates" type="file" @change="handleCandidateFileChange($event)"/>
@@ -78,52 +86,22 @@ function restore() {
       <label for="ballotPapers">Wahlzettel-JSON</label>
       <input id="ballotPapers" type="file" @change="handleBallotPaperFileChange($event)"/>
     </div>
-
-    <div id="addedCandidates">
-      <div
-          v-for="addedCandidate in candidatesStore.candidates"
-          :key="addedCandidate"
-      >
-        <AddedCandidateDisplay
-            :added-candidate="addedCandidate"
-            @delete="
-            (candidate: Candidate) => {
-              candidatesStore.candidates.splice(
-                candidatesStore.candidates.indexOf(candidate),
-                1,
-              );
-            }
-          "
-        >
-        </AddedCandidateDisplay>
-      </div>
-    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-#candidateInput {
+
+#outer {
   height: 100vh;
-  width: 100vw;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
 
-#addedCandidates {
+#loadLocalFiles {
   display: flex;
   flex-direction: column;
-
-  height: 70vh;
-  overflow: scroll;
-}
-
-#candidateInput {
-  #input {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 }
 
 button {

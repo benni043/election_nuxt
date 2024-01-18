@@ -13,15 +13,15 @@ function getStats() {
       .filter((obj) => obj.isActive)
       .filter(
           (obj) =>
-              !(obj.primaryVoteCandidate?.lastName === 'Ungültig') ||
-              !(obj.secondaryVoteCandidate?.lastName === 'Ungültig')
+              (obj.primaryVoteCandidate?.lastName !== 'Ungültig') ||
+              (obj.secondaryVoteCandidate?.lastName !== 'Ungültig')
       ).length;
 
   invalidVoteCount = ballotPaperStore.ballotPapers
       .filter((obj) => obj.isActive)
       .filter(
           (obj) =>
-              (obj.primaryVoteCandidate?.lastName === 'Ungültig') ||
+              (obj.primaryVoteCandidate?.lastName === 'Ungültig') &&
               (obj.secondaryVoteCandidate?.lastName === 'Ungültig')
       ).length;
 }

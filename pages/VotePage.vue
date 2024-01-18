@@ -85,8 +85,6 @@ function result() {
 }
 
 if (process.client) {
-
-  candidateStore.init();
 }
 
 </script>
