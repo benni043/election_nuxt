@@ -24,6 +24,12 @@ function getStats() {
               (obj.primaryVoteCandidate?.lastName === 'Ungültig') &&
               (obj.secondaryVoteCandidate?.lastName === 'Ungültig')
       ).length;
+
+  candidateStore.candidates.sort((a, b) =>
+      b.electionStats.points - a.electionStats.points == 0
+          ? b.electionStats.numberOfFirstVotes - a.electionStats.numberOfFirstVotes
+          : b.electionStats.points - a.electionStats.points
+  );
 }
 
 function exportCandidates() {
@@ -87,10 +93,10 @@ getStats();
 
     <div id="endCandidate">
       <div
-          v-for="(endCandidate, index) in candidateStore.candidates"
+          v-for="endCandidate in candidateStore.candidates"
           :key="endCandidate"
       >
-        <EndCadidateDisplay v-if="index != 0" :candidate="endCandidate"></EndCadidateDisplay>
+        <EndCadidateDisplay v-if="endCandidate.lastName !== 'Ungültig'" :candidate="endCandidate"></EndCadidateDisplay>
       </div>
     </div>
   </div>

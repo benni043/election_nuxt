@@ -118,7 +118,7 @@ function remove() {
   display: flex;
   flex-direction: column;
 
-  width: 200px;
+  width: 300px;
 }
 
 #head {
