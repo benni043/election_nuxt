@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useCandidateStore } from "~/stores/useCandidateStore";
-import { useLocalStorage } from "#imports";
+import {useCandidateStore} from "~/stores/useCandidateStore";
+import {useLocalStorage} from "#imports";
 
 let candidateStore = useCandidateStore();
 let ballotPaperStore = useBallotPaperStore();
@@ -50,15 +50,32 @@ function restore() {
   const storedCandidates = localStorage.getItem("candidates");
   const storedBallots = localStorage.getItem("ballots");
 
-  if (storedCandidates && storedBallots) {
+  if (storedCandidates) {
     candidateStore.candidates = JSON.parse(storedCandidates);
-    ballotPaperStore.ballotPapers = JSON.parse(storedBallots);
-
-    redirectToVotePage();
   } else {
     console.log("empty");
+    return;
   }
+
+  if (storedBallots) {
+    ballotPaperStore.ballotPapers = JSON.parse(storedBallots);
+  }
+
+  redirectToVotePage();
 }
+
+function hasStoredData(): boolean {
+  const storedCandidates: string | null = localStorage.getItem("candidates");
+
+  return (storedCandidates != null);
+}
+
+let other = ref(false);
+
+if (process.client) {
+  other.value = hasStoredData();
+}
+
 
 function addCandidates() {
   return navigateTo("/CandidateInputPage");
@@ -75,14 +92,15 @@ function redirectToVotePage() {
       <div id="addCandidates">
         <label class="head">Daten selbst hinzufügen: </label>
         <button @click="addCandidates">Hinzufügen</button>
+
       </div>
 
       <div id="restore">
         <label class="head">Daten aus letzter Sitzung wiederherstellen: </label>
 
-<!--        todo disable or warning if empty-->
-        <button @click="restore">Wiederherstellen</button>
+        <button :disabled="!other" @click="restore">Wiederherstellen</button>
       </div>
+
 
       <div>
         <div id="loadLocalFiles">
@@ -90,22 +108,21 @@ function redirectToVotePage() {
 
           <label class="buttonHead" for="candidates">Kandidaten-JSON</label>
           <input
-            id="candidates"
-            type="file"
-            @change="handleCandidateFileChange($event)"
+              id="candidates"
+              type="file"
+              @change="handleCandidateFileChange($event)"
           />
 
           <label class="buttonHead" for="ballotPapers">Wahlzettel-JSON</label>
           <input
-            id="ballotPapers"
-            type="file"
-            @change="handleBallotPaperFileChange($event)"
+              id="ballotPapers"
+              type="file"
+              @change="handleBallotPaperFileChange($event)"
           />
         </div>
         <button
-          :disabled="candidateFile === null || ballotPaperFile === null"
-          @click="loadDataFromFiles"
-        >
+            :disabled="candidateFile === null || ballotPaperFile === null"
+            @click="loadDataFromFiles">
           Laden
         </button>
       </div>
