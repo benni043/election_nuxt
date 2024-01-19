@@ -43,9 +43,6 @@ function change() {
   if (primaryCandidate || secondaryCandidate) {
     emit("activeBallotPaper", props.ballotPaper);
   }
-
-  //todo implement update for change
-  useLocalStorage().updateLocalStorage();
 }
 
 function remove() {

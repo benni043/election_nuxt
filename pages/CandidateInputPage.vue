@@ -2,11 +2,15 @@
 
 import type {Candidate} from "~/utils/types";
 import {useCandidateStore} from "~/stores/useCandidateStore";
+import {useLocalStorage} from "~/stores/useLocalStorage";
 
 let candidatesStore = useCandidateStore();
 
 function redirectToVotePage() {
   candidatesStore.init();
+
+  useLocalStorage().updateLocalStorage();
+
   return navigateTo("/VotePage");
 }
 
