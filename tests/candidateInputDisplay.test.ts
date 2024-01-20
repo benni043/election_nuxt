@@ -3,7 +3,7 @@ import { expect, test } from "vitest";
 import { mount } from "@vue/test-utils";
 import type { Candidate } from "~/utils/types";
 
-describe("ballotPaper test", () => {
+describe("candidateInput test", () => {
   test("try_to_add_user_with_empty_form", async () => {
     expect(_candidateInputDisplay).toBeTruthy();
 
