@@ -1,4 +1,4 @@
-import { afterEach, beforeAll, beforeEach, expect, test } from "vitest";
+import { afterEach, beforeEach, expect, test } from "vitest";
 
 import type { BallotPaper, Candidate, ElectionStats } from "~/utils/types";
 
