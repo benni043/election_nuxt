@@ -21,13 +21,6 @@ export enum VoteType {
   FIRST_VOTE,
   SECONDARY_VOTE,
 }
-
-export enum DisplayState {
-  VOTE_BEFORE,
-  VOTE,
-  VOTE_AFTER
-}
-
 export interface BallotPaper {
   id: UUID;
   ballotPaperNumber: number;

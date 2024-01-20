@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {type BallotPaper, type Candidate, VoteType} from "~/utils/types";
-import {useCandidateStore} from "~/stores/useCandidateStore";
-import {useBallotPaperStore} from "~/stores/useBallotPaperStore";
-import {useLocalStorage} from "~/stores/useLocalStorage";
+import { type BallotPaper, type Candidate, VoteType } from "~/utils/types";
+import { useCandidateStore } from "~/stores/useCandidateStore";
+import { useBallotPaperStore } from "~/stores/useBallotPaperStore";
+import { useLocalStorage } from "~/stores/useLocalStorage";
 
 let candidateStore = useCandidateStore();
 let ballotPaperStore = useBallotPaperStore();
@@ -42,14 +42,17 @@ function save() {
   let newBallotPaper = {
     id: crypto.randomUUID(),
     ballotPaperNumber: activeBallotPaper
-        ? activeBallotPaper.ballotPaperNumber
-        : Math.max(...ballotPaperStore.ballotPapers.map(obj => obj.ballotPaperNumber), 0) + 1,
+      ? activeBallotPaper.ballotPaperNumber
+      : Math.max(
+          ...ballotPaperStore.ballotPapers.map((obj) => obj.ballotPaperNumber),
+          0,
+        ) + 1,
     isActive: true,
     primaryVoteCandidate: primaryVoteCandidate,
     secondaryVoteCandidate: secondaryVoteCandidate,
   } as BallotPaper;
 
-  ballotPaperStore.addBallotPaper(newBallotPaper);
+  ballotPaperStore.ballotPapers.push(newBallotPaper);
 
   if (activeBallotPaper) {
     activeBallotPaper.isActive = false;
@@ -74,10 +77,14 @@ function reset() {
     candidate.secondaryVoteChecked = false;
   }
 
+  updateLocalStorage();
+}
+
+function updateLocalStorage() {
   useLocalStorage().updateLocalStorage();
 }
 
-function result() {
+function navigateToResultPage() {
   return navigateTo("/ResultPage");
 }
 </script>
@@ -86,21 +93,21 @@ function result() {
   <div id="candidateShow">
     <div id="candidates">
       <div
-          ref="refs"
-          v-for="candidate in candidateStore.candidates"
-          :key="candidate"
+        ref="refs"
+        v-for="candidate in candidateStore.candidates"
+        :key="candidate"
       >
         <CandidateDisplay
-            :candidate="candidate"
-            :is-primary-vote-clicked="isPrimaryVoteClicked"
-            :is-secondary-vote-clicked="isSecondaryVoteClicked"
-            :can-double-vote="candidate.lastName === 'Ungültig'"
-            @primary-vote="
+          :candidate="candidate"
+          :is-primary-vote-clicked="isPrimaryVoteClicked"
+          :is-secondary-vote-clicked="isSecondaryVoteClicked"
+          :can-double-vote="candidate.lastName === 'Ungültig'"
+          @primary-vote="
             (candidate: Candidate) => {
               set(VoteType.FIRST_VOTE, candidate);
             }
           "
-            @secondary-vote="
+          @secondary-vote="
             (candidate: Candidate) => {
               set(VoteType.SECONDARY_VOTE, candidate);
             }
@@ -111,31 +118,34 @@ function result() {
 
     <div id="buttons">
       <button :disabled="!canSave" @click="save">Speichern</button>
-      <button :disabled="activeBallotPaper !== null" @click="result">
+      <button
+        :disabled="activeBallotPaper !== null"
+        @click="navigateToResultPage"
+      >
         Wahl beenden
       </button>
     </div>
 
     <div id="ballotPapers">
       <div
-          ref="refs"
-          v-for="ballotPaper in ballotPaperStore.ballotPapers.slice().reverse()"
-          :key="ballotPaper"
+        ref="refs"
+        v-for="ballotPaper in ballotPaperStore.ballotPapers.slice().reverse()"
+        :key="ballotPaper"
       >
         <BallotPaperDisplay
-            :ballot-paper="ballotPaper"
-            :disabled="activeBallotPaper !== null"
-            @primary-vote="
+          :ballot-paper="ballotPaper"
+          :disabled="activeBallotPaper !== null"
+          @primary-vote="
             (candidate: Candidate) => {
               set(VoteType.FIRST_VOTE, candidate);
             }
           "
-            @secondary-vote="
+          @secondary-vote="
             (candidate: Candidate) => {
               set(VoteType.SECONDARY_VOTE, candidate);
             }
           "
-            @active-ballot-paper="
+          @active-ballot-paper="
             (ballotPaper: BallotPaper) => {
               activeBallotPaper = ballotPaper;
             }

@@ -1,8 +1,7 @@
 <script setup lang="ts">
-
-import type {Candidate} from "~/utils/types";
-import {useCandidateStore} from "~/stores/useCandidateStore";
-import {useLocalStorage} from "~/stores/useLocalStorage";
+import type { Candidate } from "~/utils/types";
+import { useCandidateStore } from "~/stores/useCandidateStore";
+import { useLocalStorage } from "~/stores/useLocalStorage";
 
 let candidatesStore = useCandidateStore();
 
@@ -11,14 +10,13 @@ function redirectToVotePage() {
 
   useLocalStorage().updateLocalStorage();
 
-  return navigateTo("/VotePage");
+  navigateTo("/VotePage");
 }
 
 function redirectToMainMenu() {
-  candidatesStore.reset();
+  candidatesStore.$reset();
   navigateTo("/");
 }
-
 </script>
 
 <template>
@@ -27,31 +25,39 @@ function redirectToMainMenu() {
       <h1>Fügen Sie hier bitte die Wahlkandidaten hinzu!</h1>
 
       <CandidateInputDisplay
-          @candidate="
+        @candidate="
           (candidate: Candidate) => {
-            candidatesStore.addCandidate(candidate);
+            candidatesStore.candidates.push(candidate);
           }
         "
       >
       </CandidateInputDisplay>
 
-      <button :disabled="candidatesStore.candidates.length < 1" @click="redirectToVotePage">Wahl starten</button>
+      <button
+        :disabled="candidatesStore.candidates.length < 2"
+        @click="redirectToVotePage"
+      >
+        Wahl starten
+      </button>
       <button @click="redirectToMainMenu">Zurück zum Hauptmenu</button>
     </div>
 
     <div id="addedCandidates">
       <div
-          v-for="addedCandidate in candidatesStore.candidates"
-          :key="addedCandidate">
+        v-for="addedCandidate in candidatesStore.candidates"
+        :key="addedCandidate"
+      >
         <AddedCandidateDisplay
-            :added-candidate="addedCandidate"
-            @delete="
+          :added-candidate="addedCandidate"
+          @delete="
             (candidate: Candidate) => {
               candidatesStore.candidates.splice(
                 candidatesStore.candidates.indexOf(candidate),
                 1,
               );
-            }">
+            }
+          "
+        >
         </AddedCandidateDisplay>
       </div>
     </div>
@@ -86,5 +92,4 @@ function redirectToMainMenu() {
 button {
   margin: 20px 20px 0 20px;
 }
-
 </style>

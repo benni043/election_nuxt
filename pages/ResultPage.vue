@@ -75,14 +75,18 @@ function download(blob: Blob, fileName: string) {
   document.body.removeChild(downloadLink);
 }
 
-function end() {
-  candidateStore.reset();
-  ballotPaperStore.reset();
+function reset() {
+  candidateStore.$reset();
+  ballotPaperStore.$reset();
 
   localStorage.removeItem("candidates");
   localStorage.removeItem("ballots");
 
-  return navigateTo("/");
+  navigateToMainMenu();
+}
+
+function navigateToMainMenu() {
+  navigateTo("/");
 }
 
 getStats();
@@ -91,7 +95,7 @@ getStats();
 <template>
   <div id="endShow">
     <div id="center">
-      <button @click="end">Beenden</button>
+      <button @click="reset">Beenden</button>
       <button @click="exportCandidates">download candidates</button>
       <button @click="exportBallotPapers">download ballots</button>
 
@@ -102,10 +106,7 @@ getStats();
     </div>
 
     <div id="endCandidate">
-      <div
-        v-for="endCandidate in getSortedCandidates()"
-        :key="endCandidate"
-      >
+      <div v-for="endCandidate in getSortedCandidates()" :key="endCandidate">
         <EndCadidateDisplay
           v-if="endCandidate.lastName !== 'Ungültig'"
           :candidate="endCandidate"
