@@ -84,7 +84,7 @@ function generateClasses() {
         </select>
       </div>
 
-      <button type="submit">Bestätigen</button>
+      <button :disabled="(!firstName || !lastName || !schoolClass)" type="submit">Bestätigen</button>
     </form>
   </div>
 </template>
