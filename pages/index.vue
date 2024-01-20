@@ -88,6 +88,8 @@ function redirectToVotePage() {
 <template>
   <div id="outer2">
     <div id="outer">
+      <h1>Kandidaten hinzufügen um zu starten!</h1>
+
       <div id="addCandidates">
         <label class="head">Daten selbst hinzufügen: </label>
         <button @click="redirectToCandidateInputPage">Hinzufügen</button>

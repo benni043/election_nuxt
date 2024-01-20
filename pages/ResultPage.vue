@@ -95,14 +95,14 @@ getStats();
 <template>
   <div id="endShow">
     <div id="center">
-      <button @click="reset">Beenden</button>
-      <button @click="exportCandidates">download candidates</button>
-      <button @click="exportBallotPapers">download ballots</button>
-
       <div id="data">
         <div>Gültige Stimmen: {{ validVoteCount }}</div>
         <div>Ungültige Stimmen: {{ invalidVoteCount }}</div>
       </div>
+
+      <button id="end" @click="reset">Beenden</button>
+      <button @click="exportCandidates">Kandidaten herunterladen</button>
+      <button @click="exportBallotPapers">Wahlzettel herunterladen</button>
     </div>
 
     <div id="endCandidate">
@@ -117,12 +117,16 @@ getStats();
 </template>
 
 <style scoped>
+#end {
+  background-color: #ef1a1a;
+  border: 2px solid black;
+}
+
 #endShow {
   height: 100vh;
   width: 100vw;
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
 }
 
