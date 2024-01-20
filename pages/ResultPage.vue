@@ -86,7 +86,7 @@ function reset() {
 }
 
 function navigateToMainMenu() {
-  navigateTo("/");
+  return navigateTo("/");
 }
 
 getStats();

@@ -9,8 +9,8 @@ let props = defineProps<{
 }>();
 
 let emit = defineEmits<{
-  primaryVote: [id: Candidate];
-  secondaryVote: [id: Candidate];
+  primaryVote: [candidate: Candidate];
+  secondaryVote: [candidate: Candidate];
 }>();
 
 function change(voteType: VoteType) {

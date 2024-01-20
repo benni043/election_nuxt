@@ -10,12 +10,12 @@ function redirectToVotePage() {
 
   useLocalStorage().updateLocalStorage();
 
-  navigateTo("/VotePage");
+  return navigateTo("/VotePage");
 }
 
 function redirectToMainMenu() {
   candidatesStore.$reset();
-  navigateTo("/");
+  return navigateTo("/");
 }
 </script>
 

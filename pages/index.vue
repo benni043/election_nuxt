@@ -77,11 +77,11 @@ if (process.client) {
 }
 
 function redirectToCandidateInputPage() {
-  navigateTo("/CandidateInputPage");
+  return navigateTo("/CandidateInputPage");
 }
 
 function redirectToVotePage() {
-  navigateTo("/VotePage");
+  return navigateTo("/VotePage");
 }
 </script>
 
