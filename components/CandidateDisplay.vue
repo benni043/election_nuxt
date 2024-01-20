@@ -3,8 +3,8 @@ import { type Candidate, VoteType } from "~/utils/types";
 
 let props = defineProps<{
   candidate: Candidate;
-  isPrimaryVoteClicked: boolean;
-  isSecondaryVoteClicked: boolean;
+  canPrimaryVoteBeClicked: boolean;
+  canSecondaryVoteBeClicked: boolean;
   canDoubleVote: boolean;
 }>();
 
@@ -37,7 +37,7 @@ function change(voteType: VoteType) {
       <div>
         <input
           :disabled="
-            (!props.isPrimaryVoteClicked &&
+            (!props.canPrimaryVoteBeClicked &&
               !props.candidate.primaryVoteChecked) ||
             (props.candidate.secondaryVoteChecked && !props.canDoubleVote)
           "
@@ -50,7 +50,7 @@ function change(voteType: VoteType) {
         <label
           :class="{
             disabled:
-              (!props.isPrimaryVoteClicked &&
+              (!props.canPrimaryVoteBeClicked &&
                 !props.candidate.primaryVoteChecked) ||
               (props.candidate.secondaryVoteChecked && !props.canDoubleVote),
           }"
@@ -62,7 +62,7 @@ function change(voteType: VoteType) {
       <div>
         <input
           :disabled="
-            (!props.isSecondaryVoteClicked &&
+            (!props.canSecondaryVoteBeClicked &&
               !props.candidate.secondaryVoteChecked) ||
             (props.candidate.primaryVoteChecked && !props.canDoubleVote)
           "
@@ -75,7 +75,7 @@ function change(voteType: VoteType) {
         <label
           :class="{
             disabled:
-              (!props.isSecondaryVoteClicked &&
+              (!props.canSecondaryVoteBeClicked &&
                 !props.candidate.secondaryVoteChecked) ||
               (props.candidate.primaryVoteChecked && !props.canDoubleVote),
           }"

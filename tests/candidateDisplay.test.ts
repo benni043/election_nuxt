@@ -37,8 +37,8 @@ describe("candidateDisplay test", () => {
     const wrapper = mount(_candidateDisplay, {
       props: {
         candidate: candidate1,
-        isPrimaryVoteClicked: false,
-        isSecondaryVoteClicked: false,
+        canPrimaryVoteBeClicked: false,
+        canSecondaryVoteBeClicked: false,
         canDoubleVote: false,
       },
     });
@@ -57,8 +57,8 @@ describe("candidateDisplay test", () => {
     const wrapper = mount(_candidateDisplay, {
       props: {
         candidate: candidate1,
-        isPrimaryVoteClicked: true,
-        isSecondaryVoteClicked: false,
+        canPrimaryVoteBeClicked: true,
+        canSecondaryVoteBeClicked: false,
         canDoubleVote: false,
       },
     });
@@ -75,8 +75,8 @@ describe("candidateDisplay test", () => {
     const wrapper = mount(_candidateDisplay, {
       props: {
         candidate: candidate1,
-        isPrimaryVoteClicked: true,
-        isSecondaryVoteClicked: false,
+        canPrimaryVoteBeClicked: true,
+        canSecondaryVoteBeClicked: false,
         canDoubleVote: false,
       },
     });
@@ -104,8 +104,8 @@ describe("candidateDisplay test", () => {
             numberOfFirstVotes: 0,
           } as ElectionStats,
         } as Candidate,
-        isPrimaryVoteClicked: true,
-        isSecondaryVoteClicked: false,
+        canPrimaryVoteBeClicked: true,
+        canSecondaryVoteBeClicked: false,
         canDoubleVote: false,
       },
     });
@@ -133,8 +133,8 @@ describe("candidateDisplay test", () => {
             numberOfFirstVotes: 0,
           } as ElectionStats,
         } as Candidate,
-        isPrimaryVoteClicked: false,
-        isSecondaryVoteClicked: true,
+        canPrimaryVoteBeClicked: false,
+        canSecondaryVoteBeClicked: true,
         canDoubleVote: false,
       },
     });
@@ -162,8 +162,8 @@ describe("candidateDisplay test", () => {
             numberOfFirstVotes: 0,
           } as ElectionStats,
         } as Candidate,
-        isPrimaryVoteClicked: false,
-        isSecondaryVoteClicked: true,
+        canPrimaryVoteBeClicked: false,
+        canSecondaryVoteBeClicked: true,
         canDoubleVote: true,
       },
     });

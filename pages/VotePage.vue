@@ -7,8 +7,8 @@ import { useLocalStorage } from "~/stores/useLocalStorage";
 let candidateStore = useCandidateStore();
 let ballotPaperStore = useBallotPaperStore();
 
-let isPrimaryVoteClicked = ref(true);
-let isSecondaryVoteClicked = ref(true);
+let canPrimaryVoteBeClicked = ref(true);
+let canSecondaryVoteBeClicked = ref(true);
 
 let canSave = ref(false);
 
@@ -19,14 +19,14 @@ let activeBallotPaper: BallotPaper | null = null;
 
 function set(voteType: VoteType, candidate: Candidate | null) {
   if (voteType === VoteType.FIRST_VOTE) {
-    isPrimaryVoteClicked.value = !isPrimaryVoteClicked.value;
-    primaryVoteCandidate = isPrimaryVoteClicked.value ? null : candidate;
+    canPrimaryVoteBeClicked.value = !canPrimaryVoteBeClicked.value;
+    primaryVoteCandidate = canPrimaryVoteBeClicked.value ? null : candidate;
   } else {
-    isSecondaryVoteClicked.value = !isSecondaryVoteClicked.value;
-    secondaryVoteCandidate = isSecondaryVoteClicked.value ? null : candidate;
+    canSecondaryVoteBeClicked.value = !canSecondaryVoteBeClicked.value;
+    secondaryVoteCandidate = canSecondaryVoteBeClicked.value ? null : candidate;
   }
 
-  canSave.value = !isPrimaryVoteClicked.value && !isSecondaryVoteClicked.value;
+  canSave.value = !canPrimaryVoteBeClicked.value && !canSecondaryVoteBeClicked.value;
 }
 
 function save() {
@@ -62,8 +62,8 @@ function save() {
 }
 
 function reset() {
-  isPrimaryVoteClicked.value = true;
-  isSecondaryVoteClicked.value = true;
+  canPrimaryVoteBeClicked.value = true;
+  canSecondaryVoteBeClicked.value = true;
 
   canSave.value = false;
 
@@ -99,8 +99,8 @@ function navigateToResultPage() {
       >
         <CandidateDisplay
           :candidate="candidate"
-          :is-primary-vote-clicked="isPrimaryVoteClicked"
-          :is-secondary-vote-clicked="isSecondaryVoteClicked"
+          :can-primary-vote-be-clicked="canPrimaryVoteBeClicked"
+          :can-secondary-vote-be-clicked="canSecondaryVoteBeClicked"
           :can-double-vote="candidate.lastName === 'Ungültig'"
           @primary-vote="
             (candidate: Candidate) => {
