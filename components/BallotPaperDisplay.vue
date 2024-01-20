@@ -98,12 +98,14 @@ function remove() {
     <div id="buttonCenter">
       <button
         @click="change"
+        id="change"
         :disabled="!props.ballotPaper.isActive || props.disabled"
       >
         Ändern
       </button>
       <button
         @click="remove"
+        id="remove"
         :disabled="!props.ballotPaper.isActive || props.disabled"
       >
         Löschen

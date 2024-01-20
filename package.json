@@ -8,17 +8,22 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest"
   },
   "devDependencies": {
+    "@nuxt/test-utils": "^3.10.0",
+    "@vitejs/plugin-vue": "^5.0.3",
+    "@vue/test-utils": "^2.4.3",
+    "happy-dom": "^13.2.0",
     "nuxt": "^3.9.3",
     "prettier": "^3.2.4",
     "sass": "^1.70.0",
+    "vitest": "^1.2.1",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "@pinia/nuxt": "^0.5.1",
-    "vitest": "^1.2.1"
+    "@pinia/nuxt": "^0.5.1"
   }
 }
