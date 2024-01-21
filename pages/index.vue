@@ -98,7 +98,7 @@ function redirectToVotePage() {
       <div id="restore">
         <label class="head">Daten aus letzter Sitzung wiederherstellen: </label>
 
-        <button :disabled="!other" @click="restore">Wiederherstellen</button>
+        <button id="restoreButton" :disabled="!other" @click="restore">Wiederherstellen</button>
       </div>
 
       <div>
@@ -121,6 +121,7 @@ function redirectToVotePage() {
         </div>
         <button
           :disabled="candidateFile === null || ballotPaperFile === null"
+          id="localFilesButton"
           @click="loadDataFromFiles"
         >
           Laden
