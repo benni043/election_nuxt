@@ -1,9 +1,11 @@
-import { afterEach, beforeEach, expect, test } from "vitest";
-import _resultPage from "../../pages/ResultPage.vue";
-import { mount } from "@vue/test-utils";
+import { useCandidateStore } from "~/stores/useCandidateStore";
+import { useBallotPaperStore } from "~/stores/useBallotPaperStore";
+import {afterEach, beforeEach, expect} from "vitest";
+import crypto from "crypto";
 import type { BallotPaper, Candidate, ElectionStats } from "~/utils/types";
-import * as crypto from "crypto";
-import { useBallotPaperStore, useCandidateStore } from "#imports";
+import _votePage from "../../pages/VotePage.vue"
+import {mount} from "@vue/test-utils";
+import exp from "node:constants";
 
 let candidateStore = useCandidateStore();
 let ballotPaperStore = useBallotPaperStore();
@@ -96,33 +98,33 @@ describe("resultPage tests", () => {
     ballotPaperStore.$reset();
   });
 
-  test("check if correct valid and invalid count", () => {
-    expect(_resultPage).toBeTruthy();
+  test("check if ballot papers saves correctly", () => {
+    expect(_votePage).toBeTruthy();
 
-    let wrapper = mount(_resultPage);
+    const wrapper = mount(_votePage);
 
-    const validVoteCount = wrapper.vm.validVoteCount;
-    const invalidVoteCount = wrapper.vm.invalidVoteCount;
+    let candidate1Copy = JSON.parse(JSON.stringify(candidateStore.candidates[0]));
+    let candidate2Copy = JSON.parse(JSON.stringify(candidateStore.candidates[1]));
 
-    expect(validVoteCount).toEqual(3);
-    expect(invalidVoteCount).toEqual(1);
-  });
+    let oldBallotPaperListLength = JSON.parse(JSON.stringify(ballotPaperStore.ballotPapers.length))
 
-  test("check if reset works", () => {
-    expect(_resultPage).toBeTruthy();
+    wrapper.vm.primaryVoteCandidate = candidateStore.candidates[0];
+    wrapper.vm.secondaryVoteCandidate = candidateStore.candidates[1];
 
-    let wrapper = mount(_resultPage);
+    wrapper.vm.canSave = true;
 
-    wrapper.vm.reset();
+    wrapper.vm.canPrimaryVoteBeClicked = false;
+    wrapper.vm.canSecondaryVoteBeClicked = false;
 
-    const validVoteCount = wrapper.vm.validVoteCount;
-    const invalidVoteCount = wrapper.vm.invalidVoteCount;
+    wrapper.vm.save();
 
-    expect(validVoteCount).toEqual(0);
-    expect(invalidVoteCount).toEqual(0);
-    expect(candidateStore.candidates.length).toEqual(0);
-    expect(ballotPaperStore.ballotPapers.length).toEqual(0);
-    expect(localStorage.getItem("candidates")).toBeNull();
-    expect(localStorage.getItem("ballots")).toBeNull();
-  });
+    expect(candidateStore.candidates[0].electionStats.points).toEqual(candidate1Copy.electionStats.points + 2);
+    expect(candidateStore.candidates[0].electionStats.numberOfFirstVotes).toEqual(candidate1Copy.electionStats.numberOfFirstVotes + 1);
+
+    expect(candidateStore.candidates[1].electionStats.points).toEqual(candidate2Copy.electionStats.points + 1);
+
+    expect(ballotPaperStore.ballotPapers.length).toEqual(oldBallotPaperListLength + 1)
+
+    expect(JSON.parse(localStorage.getItem("ballots")!).length).toEqual(oldBallotPaperListLength + 1)
+  })
 });
