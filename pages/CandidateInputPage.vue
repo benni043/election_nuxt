@@ -39,7 +39,7 @@ function redirectToMainMenu() {
       >
         Wahl starten
       </button>
-      <button @click="redirectToMainMenu">Zurück zum Hauptmenu</button>
+      <button id="back" @click="redirectToMainMenu">Zurück zum Hauptmenu</button>
     </div>
 
     <div id="addedCandidates">

@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, test } from "vitest";
 
 import type { BallotPaper, Candidate, ElectionStats } from "~/utils/types";
 
-import _ballotPaperDisplay from "../components/BallotPaperDisplay.vue";
+import _ballotPaperDisplay from "../../components/BallotPaperDisplay.vue";
 import { mount } from "@vue/test-utils";
 import { useBallotPaperStore, useCandidateStore } from "#imports";
 

@@ -1,5 +1,5 @@
 import { afterEach, expect, test } from "vitest";
-import _addedCandidateDisplay from "../components/AddedCandidateDisplay.vue";
+import _addedCandidateDisplay from "../../components/AddedCandidateDisplay.vue";
 import { mount } from "@vue/test-utils";
 import type { Candidate, ElectionStats } from "~/utils/types";
 
