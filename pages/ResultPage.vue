@@ -82,6 +82,9 @@ function reset() {
   localStorage.removeItem("candidates");
   localStorage.removeItem("ballots");
 
+  validVoteCount = 0;
+  invalidVoteCount = 0;
+
   navigateToMainMenu();
 }
 
