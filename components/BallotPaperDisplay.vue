@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { BallotPaper, Candidate } from "~/utils/types";
-import { useCandidateStore } from "~/stores/useCandidateStore";
-import { useLocalStorage } from "~/stores/useLocalStorage";
+import type {BallotPaper, Candidate} from "~/utils/types";
+import {useCandidateStore} from "~/stores/useCandidateStore";
+import {useLocalStorage} from "~/stores/useLocalStorage";
 
 let props = defineProps<{
   ballotPaper: BallotPaper;
@@ -15,10 +15,11 @@ let emit = defineEmits<{
 }>();
 
 let candidateStore = useCandidateStore();
+let ballotPaperStore = useBallotPaperStore();
 
 function change() {
   let primaryCandidate = candidateStore.getByID(
-    props.ballotPaper.primaryVoteCandidate!.id,
+      props.ballotPaper.primaryVoteCandidate!.id,
   );
 
   if (primaryCandidate) {
@@ -30,7 +31,7 @@ function change() {
   }
 
   let secondaryCandidate = candidateStore.getByID(
-    props.ballotPaper.secondaryVoteCandidate!.id,
+      props.ballotPaper.secondaryVoteCandidate!.id,
   );
 
   if (secondaryCandidate) {
@@ -47,7 +48,7 @@ function change() {
 
 function remove() {
   let primaryCandidate = candidateStore.getByID(
-    props.ballotPaper.primaryVoteCandidate!.id,
+      props.ballotPaper.primaryVoteCandidate!.id,
   );
 
   if (primaryCandidate) {
@@ -56,7 +57,7 @@ function remove() {
   }
 
   let secondaryCandidate = candidateStore.getByID(
-    props.ballotPaper.secondaryVoteCandidate!.id,
+      props.ballotPaper.secondaryVoteCandidate!.id,
   );
 
   if (secondaryCandidate) {
@@ -83,7 +84,7 @@ function remove() {
         </div>
       </div>
 
-      <br />
+      <br/>
 
       <div v-if="props.ballotPaper.secondaryVoteCandidate">
         <div class="innerHead">Zweitstimme:</div>
@@ -97,16 +98,16 @@ function remove() {
 
     <div id="buttonCenter">
       <button
-        @click="change"
-        id="change"
-        :disabled="!props.ballotPaper.isActive || props.disabled"
+          @click="change"
+          id="change"
+          :disabled="(!props.ballotPaper.isActive || props.disabled) || !ballotPaperStore.optionsActivated"
       >
         Ändern
       </button>
       <button
-        @click="remove"
-        id="remove"
-        :disabled="!props.ballotPaper.isActive || props.disabled"
+          @click="remove"
+          id="remove"
+          :disabled="(!props.ballotPaper.isActive || props.disabled) || !ballotPaperStore.optionsActivated"
       >
         Löschen
       </button>
